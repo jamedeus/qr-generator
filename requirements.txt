@@ -1,0 +1,5 @@
+pypng
+Pillow
+pyqrcode
+phonenumbers
+flask
