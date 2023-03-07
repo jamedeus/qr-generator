@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Contact QR Code Generator</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
+    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    <style>
+        /* Limit width for readability on large screen sizes */
+        @media (min-width: 1200px) {
+        .container {
+            width: 960px;
+        }
+        }
+
+        /* Scale output image */
+        #output {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="row">
+            <h1 class="text-center mt-3">QR Code Generator</h1>
+        </div>
+
+        <div class="row">
+            <div class="col-6 mt-3">
+                <form>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="firstName" id="firstName" />
+                        <label for="firstName">First Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" name="lastName" id="lastName" />
+                        <label for="lastName">Last Name</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" name="email" id="email" />
+                        <label for="email">Email</label>
+                    </div>
+
+                    <div class="form-floating mb-3">
+                        <input type="phone" class="form-control" name="phone" id="phone" />
+                        <label for="phone">Phone</label>
+                    </div>
+
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary mx-auto">Generate</button>
+                    </div>
+                </form>
+            </div>
+
+            <div class="col-6 m-auto">
+                <img id="output">
+                </img>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function handleSubmit(event) {
+            event.preventDefault();
+
+            // Get form data
+            const data = Object.fromEntries(new FormData(event.target).entries());
+            console.log(data);
+
+            // Post form data, receive base64 PNG
+            var result = await fetch('/generate', {
+                method: 'POST',
+                body: JSON.stringify(data),
+                headers: { 'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json' }
+            });
+
+            result = await result.text();
+            console.log(result)
+
+            // Add image to right column
+            document.getElementById('output').src = "data:image/png;base64," + result;
+        };
+
+        const form = document.querySelector('form');
+        form.addEventListener('submit', handleSubmit);
+    </script>
+</body>
+</html>
