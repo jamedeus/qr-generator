@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, send_file
 from ContactQr import *
 import json
 import io
@@ -15,7 +15,7 @@ def serve():
 @app.post("/generate")
 def generate():
     data = request.get_json()
-    #print(json.dumps(data, indent=4))
+    print(f'\nGenerate:\n{json.dumps(data, indent=4)}\n')
 
     qr = ContactQr(data['firstName'], data['lastName'], data['phone'], data['email'])
     qr.save()
@@ -26,6 +26,9 @@ def generate():
 
     return img_bytes
 
+@app.get("/download/<name>")
+def download(name):
+    return send_file(f'{name}_contact.png', as_attachment=True)
 
 
 if __name__ == '__main__':
