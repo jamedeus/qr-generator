@@ -14,64 +14,82 @@ class ContactQr():
         self.phone = phone
         self.email = email
 
+        # Generate QR code - binary, png, labeled png
         self.qr_raw = self.generate_qr_code()
-
+        self.qr_image = self.generate_qr_image()
         self.qr_complete = self.add_text()
 
+    # Returns pyqrcode instance
     def generate_qr_code(self):
         return pyqrcode.create(f"MECARD:N:{self.last_name},{self.first_name};TEL:{self.phone};EMAIL:{self.email};")
 
-    def add_text(self):
-        # Calc scale needed for approx 500x500 output
-        scale = int(500 / self.qr_raw.get_png_size())
+    # Returns PIL.Image containing QR code png
+    def generate_qr_image(self, size=500):
+        # Calc scale needed for requested size
+        scale = int(size / self.qr_raw.get_png_size())
 
         # Write QR to PNG in mem buffer
         image = io.BytesIO()
         self.qr_raw.png(image, scale=scale)
 
-        # Instantiate PIL object from buffer
-        qr_code = Image.open(image)
+        # Return PIL object instantiated from buffer
+        return Image.open(image)
 
+    # Find font size so text is 90% image width or less
+    def get_font(self, text, font_path, max_size):
         # For calculating text dimensions
-        draw = ImageDraw.Draw(qr_code)
+        draw = ImageDraw.Draw(self.qr_image)
+        max_width = int(self.qr_image.width * 0.90)
 
-        # Name, large font, bold
+        # Start at max size, decrease until text fits
+        font = ImageFont.truetype(font_path, max_size)
+        while draw.textsize(text, font)[0] > max_width:
+            max_size -= 1
+            font = ImageFont.truetype(font_path, max_size)
+
+        return font
+
+    # Returns completed QR image with dynamically-sized text
+    def add_text(self):
+        # Create name string, get font size
         name = f"{self.first_name} {self.last_name}"
-        name_font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", 38)
-        name_width, name_height = draw.textsize(name, name_font)
+        name_font = self.get_font(name, "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", 42)
 
-        # Format phone number
+        # Format phone number to (xxx) xxx-xxxx
         phone = phonenumbers.parse(self.phone, "US")
         phone = phonenumbers.format_number(phone, phonenumbers.PhoneNumberFormat.NATIONAL)
 
-        # Contact info, smaller font on 2 lines below name
-        info = f"{self.email}\n{self.phone}"
-        info_font = ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", 32)
+        # Create contact info string, get font size (at least 6 points smaller than name)
+        info = f"{self.email}\n{phone}"
+        info_font = self.get_font(info, "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", name_font.size-6)
+
+        # Calculate dimensions of rendered text
+        draw = ImageDraw.Draw(self.qr_image)
+        name_width, name_height = draw.textsize(name, name_font)
         info_width, info_height = draw.textsize(info, info_font)
 
         # Create empty space for text
-        text_area = Image.new('RGB', (qr_code.width, name_height + info_height + scale), color='white')
+        text_area = Image.new('RGB', (self.qr_image.width, name_height + info_height), color='white')
 
         # Add text_area below QR code
-        result = Image.new('RGB', (qr_code.width, qr_code.height + text_area.height))
-        result.paste(qr_code, (0, 0))
-        result.paste(text_area, (0, qr_code.height))
-
-        # Add text
+        result = Image.new('RGB', (self.qr_image.width, self.qr_image.height + text_area.height))
+        result.paste(self.qr_image, (0, 0))
+        result.paste(text_area, (0, self.qr_image.height))
         draw = ImageDraw.Draw(result)
 
-        # Calc name position, add
-        x = (qr_code.width - name_width) // 2
-        y = qr_code.height - scale*2
+        # Calc name position, add text
+        x = (self.qr_image.width - name_width) // 2
+        y = self.qr_image.height - 24
         draw.text((x, y), name, font=name_font, align='center', fill=(0, 0, 0))
 
-        # Calc info position, add
-        x = (qr_code.width - info_width) // 2
-        y = qr_code.height + name_height - scale*2
+        # Calc info position, add text
+        x = (self.qr_image.width - info_width) // 2
+        y = self.qr_image.height + name_height - 24
         draw.text((x, y), info, font=info_font, align='center', fill=(0, 0, 0))
 
         return result
 
+    # Save PNG to disk, filename from attributes unless set
     def save(self, filename=None):
         if filename is None:
             # Write to disk with default filename format
