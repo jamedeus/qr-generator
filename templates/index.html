@@ -23,47 +23,59 @@
     </style>
 </head>
 <body>
-    <nav class="navbar fixed-top navbar-light bg-light">
-        <div class="container-fluid">
-            <span class="navbar-brand mb-0 h1 mx-auto">QR Code Generator</span>
-        </div>
-    </nav>
-    <div class="container d-flex flex-column">
-        <div id="page1" class="row flex-grow-1">
-            <div class="col-md-6 d-flex flex-column justify-content-center vh-100">
-                <form class="pt-auto">
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="firstName" id="firstName" />
-                        <label for="firstName">First Name</label>
-                    </div>
+    <!-- Full viewport height -->
+    <div class="d-flex flex-column vh-100">
 
-                    <div class="form-floating mb-3">
-                        <input type="text" class="form-control" name="lastName" id="lastName" />
-                        <label for="lastName">Last Name</label>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" name="email" id="email" />
-                        <label for="email">Email</label>
-                    </div>
-
-                    <div class="form-floating mb-3">
-                        <input type="phone" class="form-control" name="phone" id="phone" />
-                        <label for="phone">Phone</label>
-                    </div>
-
-                    <div class="d-flex">
-                        <button type="submit" class="btn btn-primary mx-auto">Generate</button>
-                    </div>
-                </form>
+        <!-- Fixed nav bar reserves space -->
+        <nav class="navbar navbar-dark bg-primary fixed-top">
+            <div class="container-fluid">
+                <h1 class="mb-0 navbar-brand mx-auto">QR Code Generator</h1>
             </div>
+        </nav>
 
-            <div id="output_column" class="col-md-6 d-flex flex-column justify-content-center align-items-center vh-100">
-                <!-- Placeholder image -->
-                <img id="output" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAfQAAAJsCAIAAACEacZuAAAImElEQVR4nO3UwQkAIBDAMHX/nc8lBKEkE/TVPTMLgJbzOwCA98wdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgswdIMjcAYLMHSDI3AGCzB0gyNwBgi7eSQfVFMat3QAAAABJRU5ErkJggg=="></img>
+        <!-- Container reserves remaining space -->
+        <div class="container d-flex flex-column h-100">
+            <!-- Side by side on desktop, stacked on mobile -->
+            <div class="row h-100">
 
-                <div class="d-flex">
-                    <a href="" type="button" id="download" class="btn btn-success mb-3" style="visibility:hidden;">Download</a>
+                <!-- Same height as container to vertically center contents -->
+                <div class="col-md-6 d-flex flex-column justify-content-center py-3 h-100">
+                    <form>
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="firstName" id="firstName" />
+                            <label for="firstName">First Name</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="lastName" id="lastName" />
+                            <label for="lastName">Last Name</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="email" class="form-control" name="email" id="email" />
+                            <label for="email">Email</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="phone" class="form-control" name="phone" id="phone" />
+                            <label for="phone">Phone</label>
+                        </div>
+
+                        <div class="d-flex">
+                            <button type="submit" class="btn btn-primary mx-auto">Generate</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Same height as container again, 2-page layout when stacked -->
+                <!-- Hidden before QR loads (prevent scrolling to blank area) -->
+                <div id="output_column" class="col-md-6 flex-column justify-content-center align-items-center py-3 h-100" style="display:none;">
+                    <!-- Keep QR vertically centered, hidden button negates download button impact on layout -->
+                    <a style="visibility:hidden;"><button type="submit" class="btn btn-primary mt-3">Download</button></a>
+
+                    <!-- Output image + download button -->
+                    <img id="output" src=""></img>
+                    <a href="" id="download"><button type="submit" class="btn btn-primary mb-3">Download</button></a>
                 </div>
             </div>
         </div>
@@ -88,22 +100,17 @@
             result = await result.text();
             console.log(result)
 
-            // Add image to right column
+            // Add image to right column, show
             document.getElementById('output').src = "data:image/png;base64," + result;
+            document.getElementById('output_column').classList.add('d-flex');
 
-            // Show download button, set download target, scroll into view
-            document.getElementById('download').style.visibility = "visible";
+            // Set download button target, scroll into view
             document.getElementById('download').href = `/download/${data.firstName}-${data.lastName}`;
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
         };
 
         const form = document.querySelector('form');
         form.addEventListener('submit', handleSubmit);
-
-        // Scroll to top when refreshed
-        window.onload = function() { window.scroll({ top: 0, behavior: 'smooth' })};
-        window.onbeforeunload = function() { window.scroll({ top: 0, behavior: 'smooth' })};
-        window.onunload = function() { window.scroll({ top: 0, behavior: 'smooth' })};
     </script>
 </body>
 </html>
