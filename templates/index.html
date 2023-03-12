@@ -82,12 +82,52 @@
     </div>
 
     <script>
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const phoneRegex = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
+
+        // Add invalid highlight + listener to remove highlight on input
+        function markInvalid(element) {
+            element.classList.add('is-invalid');
+            element.addEventListener("input", (e) => {
+                e.target.classList.remove("is-invalid");
+            }, { once: true });
+        };
+
+        function validateForm(data) {
+            valid = true;
+
+            // Check for blank fields
+            for (i in data) {
+                if (data[i] == "") {
+                    markInvalid(document.getElementById(i));
+                    valid = false;
+                };
+            };
+
+            // Check for valid email format
+            if (!emailRegex.test(data['email'])) {
+                markInvalid(document.getElementById('email'));
+                valid = false;
+            };
+
+            // Check for valid phone number format
+            if (!phoneRegex.test(data['phone'])) {
+                markInvalid(document.getElementById('phone'));
+                valid = false;
+            };
+
+            return valid;
+        };
+
         async function handleSubmit(event) {
             event.preventDefault();
 
             // Get form data
             const data = Object.fromEntries(new FormData(event.target).entries());
             console.log(data);
+
+            // Validate form data
+            if (!validateForm(data)) {return false};
 
             // Post form data, receive base64 PNG
             var result = await fetch('/generate', {
@@ -98,7 +138,6 @@
             });
 
             result = await result.text();
-            console.log(result)
 
             // Add image to right column, show
             document.getElementById('output').src = "data:image/png;base64," + result;
@@ -108,6 +147,19 @@
             document.getElementById('download').href = `/download/${data.firstName}-${data.lastName}`;
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
         };
+
+        // Only allow numbers and hyphen in phone field
+        document.getElementById('phone').addEventListener('input', function(event) {
+            const input = event.target.value;
+            event.target.value = input.replace(/[^0-9-]/g, '');
+        });
+
+        // Allow all characters except spaces in email field
+        document.getElementById('email').addEventListener('keydown', function(event) {
+            if (event.code === 'Space') {
+                event.preventDefault();
+            };
+        });
 
         const form = document.querySelector('form');
         form.addEventListener('submit', handleSubmit);

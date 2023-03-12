@@ -9,10 +9,10 @@ import phonenumbers
 
 class ContactQr():
     def __init__(self, first_name, last_name, phone, email):
-        self.first_name = first_name
-        self.last_name = last_name
-        self.phone = phone
-        self.email = email
+        self.first_name = first_name.strip().capitalize()
+        self.last_name = last_name.strip().capitalize()
+        self.phone = phone.strip().replace('-', '')
+        self.email = email.strip().lower()
 
         # Generate QR code - binary, png, labeled png
         self.qr_raw = self.generate_qr_code()
