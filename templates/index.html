@@ -52,17 +52,17 @@
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="email" class="form-control" name="email" id="email" placeholder="Email">
+                            <input type="email" class="form-control" name="email" id="email" placeholder="Email" pattern="^[^\s@]+@[^\s@]+\.[^\s@]+$">
                             <label for="email">Email</label>
                         </div>
 
                         <div class="form-floating mb-3">
-                            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Phone">
+                            <input type="tel" class="form-control" name="phone" id="phone" placeholder="Phone" pattern="^(\d{10}|\d{3}-\d{3}-\d{4})$">
                             <label for="phone">Phone</label>
                         </div>
 
                         <div class="d-flex">
-                            <button type="submit" class="btn btn-primary mx-auto">Generate</button>
+                            <button type="button" onclick="generate();" class="btn btn-primary mx-auto">Generate</button>
                         </div>
                     </form>
                 </div>
@@ -82,9 +82,6 @@
     </div>
 
     <script>
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        const phoneRegex = /^(\d{10}|\d{3}-\d{3}-\d{4})$/;
-
         // Add invalid highlight + listener to remove highlight on input
         function markInvalid(element) {
             element.classList.add('is-invalid');
@@ -93,41 +90,31 @@
             }, { once: true });
         };
 
-        function validateForm(data) {
-            valid = true;
+        // Takes form data, marks invalid fields, returns true if all valid
+        function isValid(data) {
+            let valid = true;
 
-            // Check for blank fields
             for (i in data) {
+                // Invalid if blank
                 if (data[i] == "") {
+                    markInvalid(document.getElementById(i));
+                    valid = false;
+
+                // Invalid if failed regex
+                } else if (!document.getElementById(i).validity.valid) {
                     markInvalid(document.getElementById(i));
                     valid = false;
                 };
             };
 
-            // Check for valid email format
-            if (!emailRegex.test(data['email'])) {
-                markInvalid(document.getElementById('email'));
-                valid = false;
-            };
-
-            // Check for valid phone number format
-            if (!phoneRegex.test(data['phone'])) {
-                markInvalid(document.getElementById('phone'));
-                valid = false;
-            };
-
             return valid;
         };
 
-        async function handleSubmit(event) {
-            event.preventDefault();
-
-            // Get form data
-            const data = Object.fromEntries(new FormData(event.target).entries());
+        async function generate() {
+            // Get form data, validate
+            const data = Object.fromEntries(new FormData(document.querySelector('form')).entries());
+            if (!isValid(data)) {return false};
             console.log(data);
-
-            // Validate form data
-            if (!validateForm(data)) {return false};
 
             // Post form data, receive base64 PNG
             var result = await fetch('/generate', {
@@ -144,7 +131,7 @@
             document.getElementById('output_column').classList.add('d-flex');
 
             // Set download button target, scroll into view
-            document.getElementById('download').href = `/download/${data.firstName}-${data.lastName}`;
+            document.getElementById('download').href = `/download/${data.firstName.trim()}-${data.lastName.trim()}`;
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
         };
 
@@ -161,8 +148,12 @@
             };
         });
 
-        const form = document.querySelector('form');
-        form.addEventListener('submit', handleSubmit);
+        // Press enter to generate
+        document.querySelector("form").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                generate();
+            };
+        });
     </script>
 </body>
 </html>
