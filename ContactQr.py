@@ -11,8 +11,9 @@ class ContactQr():
     def __init__(self, first_name, last_name, phone, email):
         self.first_name = first_name.strip().capitalize()
         self.last_name = last_name.strip().capitalize()
-        self.phone = phone.strip().replace('-', '')
+        self.phone = phone.strip().replace('-', '').replace('(', '').replace(')', '').replace(' ', '')
         self.email = email.strip().lower()
+        print(self.phone)
 
         # Generate QR code - binary, png, labeled png
         self.qr_raw = self.generate_qr_code()
