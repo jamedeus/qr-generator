@@ -1,0 +1,32 @@
+version: "3.5"
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+      - /home/pi/docker/nginx:/etc/nginx/certs
+    restart: unless-stopped
+    networks:
+      - reverse_proxy
+
+  qr-webapp:
+    image: qr-webapp:1.0
+    container_name: qr
+    hostname: qr
+    environment:
+      # Reverse proxy domain name
+      - VIRTUAL_HOST=qr.lan
+    ports:
+      - 8000:5000
+    networks:
+      - reverse_proxy
+    restart: unless-stopped
+
+networks:
+  reverse_proxy:
+    name: reverse_proxy
+    driver: bridge
