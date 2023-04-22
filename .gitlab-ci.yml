@@ -2,8 +2,23 @@ before_script:
   - docker info
 
 stages:
+  - test
   - build
   - deploy
+
+# Run unit tests
+test:
+  stage: test
+  tags:
+    - arm64
+  script:
+    - pip3 install -r requirements.txt
+    - export PATH=$PATH:/home/gitlab-runner/.local/bin
+    - coverage run --source='.' --omit='tests.py' -m unittest
+    - coverage report -m --precision=1
+  coverage: '/TOTAL.*\s+(\d+\.\d+\%)$/'
+  only:
+    - master
 
 # Build new container, increment most-recent tag
 build:
