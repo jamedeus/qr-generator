@@ -6,21 +6,24 @@ FROM node:19-buster-slim as node_build
 COPY package.json .
 RUN npm install
 
+# Install Ubuntu fonts stage
+FROM ubuntu:jammy as font_stage
+RUN apt-get update && apt-get install -y fonts-ubuntu
+
 # Final build stage
-FROM ubuntu:jammy
+FROM python:3.10-slim-buster
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/usr/local/bin:${PATH}"
-
-# Install python
-RUN apt-get update && \
-    apt-get install -y python3.10 python3-pip fonts-ubuntu && \
-    rm -rf /var/lib/apt/lists/*
 
 # Copy node + python dependencies to final build stage
 COPY --from=node_build node_modules/bootstrap/dist/css/bootstrap.min.css /mnt/node_modules/bootstrap/dist/css/bootstrap.min.css
 COPY --from=node_build node_modules/bootstrap/dist/js/bootstrap.min.js /mnt/node_modules/bootstrap/dist/js/bootstrap.min.js
 COPY --from=node_build node_modules/smoothscroll-polyfill/dist/smoothscroll.min.js /mnt/node_modules/smoothscroll-polyfill/dist/smoothscroll.min.js
+
+# Copy Ubuntu fonts to final build stage
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf
 
 WORKDIR /mnt/
 
