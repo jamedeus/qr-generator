@@ -5,7 +5,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
-    <script src="bootstrap/dist/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="bootstrap-icons/font/bootstrap-icons.css">
+    <script src="bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="smoothscroll-polyfill/dist/smoothscroll.min.js"></script>
     <style>
         /* Limit width for readability on large screen sizes */
@@ -20,6 +21,11 @@
             width: 100%;
             height: auto;
         }
+
+        /* Remove top right corner button border */
+        #menu_button {
+            border: 0px;
+        }
     </style>
 </head>
 <body>
@@ -29,7 +35,18 @@
         <!-- Fixed nav bar reserves space -->
         <nav class="navbar navbar-dark bg-primary fixed-top">
             <div class="container-fluid">
+                <button type="button" class="btn" style='visibility:hidden;'><i class="bi-list"></i></button>
                 <h1 class="mb-0 navbar-brand mx-auto">QR Code Generator</h1>
+
+                <!-- Dropdown to select QR Code type -->
+                <div class="dropdown my-auto">
+                    <button type="button" class="btn" id="menu_button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi-list" style="color: #fff;"></i></button>
+                    <ul id="settings_menu" class="dropdown-menu dropdown-menu-end" aria-labelledby="settings_button">
+                        <li><a class="dropdown-item active" data-target="contact-qr" onclick="change_form(this)"><i class="bi bi-person-lines-fill me-3"></i>Contact</a></li>
+                        <li><a class="dropdown-item" data-target="wifi-qr" onclick="change_form(this)"><i class="bi bi-wifi me-3"></i>Wifi</a></li>
+                        <li><a class="dropdown-item" data-target="link-qr" onclick="change_form(this)"><i class="bi bi-link-45deg me-3"></i>Link</a></li>
+                    </ul>
+                </div>
             </div>
         </nav>
 
@@ -40,7 +57,9 @@
 
                 <!-- Same height as container to vertically center contents -->
                 <div class="col-md-6 d-flex flex-column justify-content-center py-3 h-100">
-                    <form>
+
+                    <!-- Contact Info Form -->
+                    <form id="contact-qr">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="firstName" id="firstName" placeholder="First Name">
                             <label for="firstName">First Name</label>
@@ -62,9 +81,39 @@
                         </div>
 
                         <div class="d-flex">
-                            <button type="button" onclick="generate();" class="btn btn-primary mx-auto">Generate</button>
+                            <button type="button" onclick="generate('contact-qr');" class="btn btn-primary mx-auto">Generate</button>
                         </div>
                     </form>
+
+                    <!-- Wifi Form -->
+                    <form id="wifi-qr" class="d-none">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="ssid" id="ssid" placeholder="SSID">
+                            <label for="ssid">SSID</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input type="password" class="form-control" name="password" id="password" placeholder="*******">
+                            <label for="password">password</label>
+                        </div>
+
+                        <div class="d-flex">
+                            <button type="button" onclick="generate('wifi-qr');" class="btn btn-primary mx-auto">Generate</button>
+                        </div>
+                    </form>
+
+                    <!-- URL Form -->
+                    <form id="link-qr" class="d-none">
+                        <div class="form-floating mb-3">
+                            <input type="text" class="form-control" name="url" id="url" placeholder="" value="https://">
+                            <label for="url">URL</label>
+                        </div>
+
+                        <div class="d-flex">
+                            <button type="button" onclick="generate('link-qr');" class="btn btn-primary mx-auto">Generate</button>
+                        </div>
+                    </form>
+
                 </div>
 
                 <!-- Same height as container again, 2-page layout when stacked -->
@@ -82,6 +131,28 @@
     </div>
 
     <script>
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        };
+
+        // Change visible form when top-right menu used
+        async function change_form(el) {
+            // Hide all forms, mark all dropdown options inactive
+            document.querySelectorAll('form').forEach(function(f){f.classList.add('d-none')});
+            document.querySelectorAll('.dropdown-item').forEach(function(f){f.classList.remove('active')});
+
+            // Show requested form, mark clicked option active, hide old QR code
+            document.getElementById(el.dataset.target).classList.remove('d-none');
+            el.classList.add('active');
+            document.getElementById('output_column').style.visibility = "hidden";
+
+            // Scroll to top, wait for animation, hide result col
+            window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+            await sleep(468);
+            document.getElementById('output_column').classList.remove('d-flex');
+            document.getElementById('output_column').style.visibility = "visible";
+        };
+
         // Add invalid highlight + listener to remove highlight on input
         function markInvalid(element) {
             element.classList.add('is-invalid');
@@ -110,11 +181,15 @@
             return valid;
         };
 
-        async function generate() {
+        // Called by generate buttons, takes ID of form as argument
+        async function generate(type) {
             // Get form data, validate
-            const data = Object.fromEntries(new FormData(document.querySelector('form')).entries());
+            const data = Object.fromEntries(new FormData(document.querySelector(`#${type}`)).entries());
             if (!isValid(data)) {return false};
             console.log(data);
+
+            // Add QR type
+            data['type'] = type;
 
             // Post form data, receive base64 PNG
             var result = await fetch('/generate', {
@@ -124,14 +199,15 @@
                     'Content-Type': 'application/json' }
             });
 
-            result = await result.text();
+            result = await result.json();
+            console.log(result);
 
             // Add image to right column, show
-            document.getElementById('output').src = "data:image/png;base64," + result;
+            document.getElementById('output').src = "data:image/png;base64," + result['qr'];
             document.getElementById('output_column').classList.add('d-flex');
 
             // Set download button target, scroll into view
-            document.getElementById('download').href = `/download/${data.firstName.trim()}-${data.lastName.trim()}`;
+            document.getElementById('download').href = `/download/${result['filename']}`;
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
         };
 

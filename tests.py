@@ -16,13 +16,33 @@ class EndpointTests(TestCase):
 
     def test_generate_endpoint(self):
         # Send request, confirm status
-        payload = {'firstName': 'John', 'lastName': 'Doe','phone': '212-555-1234', 'email': 'john.doe@hotmail.com'}
+        payload = {'firstName': 'John', 'lastName': 'Doe','phone': '212-555-1234', 'email': 'john.doe@hotmail.com', 'type': 'contact-qr'}
         response = self.app.post('/generate', json=payload, content_type='application/json')
         self.assertEqual(response.status_code, 200)
 
         # Confirm created, clean up
         self.assertTrue(os.path.exists('John-Doe_contact.png'))
         os.remove('John-Doe_contact.png')
+
+    def test_wifi_qr(self):
+        # Send request, confirm status
+        payload = {'ssid': 'AzureDiamond', 'password': 'hunter2', 'type': 'wifi-qr'}
+        response = self.app.post('/generate', json=payload, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        # Confirm created, clean up
+        self.assertTrue(os.path.exists('AzureDiamond_Wifi_QR.png'))
+        os.remove('AzureDiamond_Wifi_QR.png')
+
+    def test_link_qr(self):
+        # Send request, confirm status
+        payload = {'url': 'https://jamedeus.com', 'type': 'link-qr'}
+        response = self.app.post('/generate', json=payload, content_type='application/json')
+        self.assertEqual(response.status_code, 200)
+
+        # Confirm created, clean up
+        self.assertTrue(os.path.exists('jamedeus.com_QR.png'))
+        os.remove('jamedeus.com_QR.png')
 
     #def test_download(endpoint(self):
         # TODO implement storage

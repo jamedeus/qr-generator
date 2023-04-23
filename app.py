@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, send_file, jsonify
 from ContactQr import *
+from WifiQr import *
+from LinkQr import *
 import json
 import io
 import base64
@@ -17,14 +19,23 @@ def generate():
     data = request.get_json()
     print(f'\nGenerate:\n{json.dumps(data, indent=4)}\n')
 
-    qr = ContactQr(data['firstName'], data['lastName'], data['phone'], data['email'])
+    if data['type'] == 'contact-qr':
+        qr = ContactQr(data['firstName'], data['lastName'], data['phone'], data['email'])
+        filename = f"{qr.first_name}-{qr.last_name}_contact.png"
+    elif data['type'] == 'wifi-qr':
+        qr = WifiQr(data['ssid'], data['password'])
+        filename = f"{qr.ssid}_Wifi_QR.png"
+    elif data['type'] == 'link-qr':
+        qr = LinkQr(data['url'])
+        filename = f"{qr.url[8:]}_QR.png"
+
     qr.save()
 
     buffered = io.BytesIO()
     qr.qr_complete.save(buffered, format="PNG")
     img_bytes = base64.b64encode(buffered.getvalue()).decode("utf-8")
 
-    return img_bytes
+    return jsonify({'filename': filename, 'qr': img_bytes})
 
 @app.get("/download/<name>")
 def download(name):
