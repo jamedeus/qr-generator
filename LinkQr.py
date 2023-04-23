@@ -1,86 +1,38 @@
 #!/usr/bin/env python3
 
-from PIL import Image, ImageDraw, ImageFont
 import pyqrcode
-import io
+
+from Qr import Qr
 
 
 
-class LinkQr():
+class LinkQr(Qr):
     def __init__(self, url):
         self.url = url.strip()
 
-        # Generate QR code - binary, png, labeled png
-        self.qr_raw = self.generate_qr_code()
-        self.qr_image = self.generate_qr_image()
+        # Remove protocol, set attribute for inherited save method
+        if self.url.startswith('https://'):
+            self.filename = f"{self.url[8:]}_QR"
+        elif self.url.startswith('http://'):
+            self.filename = f"{self.url[7:]}_QR"
+        else:
+            self.filename = f"{self.url}_QR"
+
+        # Create QR code
+        super().__init__()
+
+        # Get font, remove protocol and "_QR" from caption for readability
+        font = self.get_font(self.filename[:-3], "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 42)
+
+        # List of dicts
+        # Each dict contains text + font for 1 line under QR image
+        self.caption = [
+            {'text': self.filename[:-3], 'font': font}
+        ]
+
+        # Add caption to QR Image
         self.qr_complete = self.add_text()
 
     # Returns pyqrcode instance
     def generate_qr_code(self):
         return pyqrcode.create(f'{self.url}')
-
-    # Returns PIL.Image containing QR code png
-    def generate_qr_image(self, size=500):
-        # Calc scale needed for requested size
-        scale = int(size / self.qr_raw.get_png_size())
-
-        # Write QR to PNG in mem buffer
-        image = io.BytesIO()
-        self.qr_raw.png(image, scale=scale)
-
-        # Return PIL object instantiated from buffer
-        return Image.open(image)
-
-    # Find font size so text is 90% image width or less
-    def get_font(self, text, font_path, max_size):
-        # For calculating text dimensions
-        draw = ImageDraw.Draw(self.qr_image)
-        max_width = int(self.qr_image.width * 0.90)
-
-        # Start at max size, decrease until text fits
-        font = ImageFont.truetype(font_path, max_size)
-        while draw.textsize(text, font)[0] > max_width:
-            max_size -= 1
-            font = ImageFont.truetype(font_path, max_size)
-
-        return font
-
-    # Returns completed QR image with dynamically-sized text
-    def add_text(self):
-        # Create URL string, get font size
-        url = self.url
-        url_font = self.get_font(url, "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 42)
-
-        # Calculate dimensions of rendered text
-        draw = ImageDraw.Draw(self.qr_image)
-        url_width, url_height = draw.textsize(url, url_font)
-
-        # Create empty space for text
-        text_area = Image.new('RGB', (self.qr_image.width, url_height), color='white')
-
-        # Add text_area below QR code
-        result = Image.new('RGB', (self.qr_image.width, self.qr_image.height + text_area.height))
-        result.paste(self.qr_image, (0, 0))
-        result.paste(text_area, (0, self.qr_image.height))
-        draw = ImageDraw.Draw(result)
-
-        # Calc url position, add text
-        x = (self.qr_image.width - url_width) // 2
-        y = self.qr_image.height - 24
-        draw.text((x, y), url, font=url_font, align='center', fill=(0, 0, 0))
-
-        return result
-
-    # Save PNG to disk, filename from attributes unless set
-    def save(self, filename=None):
-        if filename is None:
-            # Write to disk with default filename format
-            self.qr_complete.save(f"{self.url[8:]}_QR.png")
-
-        else:
-            # Remove extension if present
-            if filename.endswith(".png"):
-                filename = filename[0:-4]
-
-            # Write to disk with chosen name
-            self.qr_complete.save(f"{filename}.png")
