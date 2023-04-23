@@ -1,7 +1,6 @@
 pypng
 Pillow
 pyqrcode
-phonenumbers
 flask
 gunicorn>=20.0.0
 coverage
