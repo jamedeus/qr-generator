@@ -124,7 +124,7 @@
 
                     <!-- Output image + download button -->
                     <img id="output" src=""></img>
-                    <a href="" id="download"><button type="submit" class="btn btn-primary mb-3">Download</button></a>
+                    <a id="download" class="btn btn-primary mb-3">Download</a>
                 </div>
             </div>
         </div>
@@ -199,16 +199,43 @@
                     'Content-Type': 'application/json' }
             });
 
-            result = await result.json();
+            result = await result.text();
             console.log(result);
 
             // Add image to right column, show
-            document.getElementById('output').src = "data:image/png;base64," + result['qr'];
+            document.getElementById('output').src = "data:image/png;base64," + result;
             document.getElementById('output_column').classList.add('d-flex');
 
-            // Set download button target, scroll into view
-            document.getElementById('download').href = `/download/${result['filename']}`;
+            // Remove old listener (if present)
+            document.getElementById('download').removeEventListener('click', downloadQR);
+
+            // Add the new listener, bind base64 image string + qr type to handler function
+            document.getElementById('download').addEventListener('click', downloadQR.bind({ result, type }));
+
+            // Scroll to result section (mobile)
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
+        };
+
+        // Decodes base64 image string from event to binary, serves download
+        function downloadQR(event) {
+            // Decode base64 image data to binary
+            const imageData = atob(this.result);
+
+            // Create Uint8Array with same length
+            const imageBuffer = new ArrayBuffer(imageData.length);
+            const imageBytes = new Uint8Array(imageBuffer);
+
+            // Read bytes into array
+            for (let i = 0; i < imageData.length; i++) {
+                imageBytes[i] = imageData.charCodeAt(i);
+            };
+
+            // Create blob object from buffer, set MIME type
+            const qr = new Blob([imageBytes], { type: 'image/png' });
+
+            // Set download url and filename, downloads immediately
+            event.target.href = URL.createObjectURL(qr);
+            event.target.download = `${this.type}.png`;
         };
 
         // Format phone number as user types
