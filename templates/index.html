@@ -26,6 +26,35 @@
         #menu_button {
             border: 0px;
         }
+
+        /* Fade out results column while changing type */
+        @keyframes fade-out {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+
+        .fade-out {
+            animation: fade-out 0.25s ease-out forwards;
+        }
+
+        /* Fade in generated QR code */
+        @keyframes fade-in {
+            0% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .fade-in {
+            animation: fade-in 0.25s ease forwards;
+        }
+
     </style>
 </head>
 <body>
@@ -141,16 +170,19 @@
             document.querySelectorAll('form').forEach(function(f){f.classList.add('d-none')});
             document.querySelectorAll('.dropdown-item').forEach(function(f){f.classList.remove('active')});
 
-            // Show requested form, mark clicked option active, hide old QR code
+            // Show requested form, mark clicked option active
             document.getElementById(el.dataset.target).classList.remove('d-none');
             el.classList.add('active');
-            document.getElementById('output_column').style.visibility = "hidden";
 
-            // Scroll to top, wait for animation, hide result col
+            // Fade out old QR, scroll to top (mobile)
+            document.getElementById('output_column').classList.remove('fade-in');
+            document.getElementById('output_column').classList.add('fade-out');
             window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+
+            // Wait for animation, hide result section, remove fade transition
             await sleep(468);
             document.getElementById('output_column').classList.remove('d-flex');
-            document.getElementById('output_column').style.visibility = "visible";
+            document.getElementById('output_column').classList.remove('fade-out');
         };
 
         // Add invalid highlight + listener to remove highlight on input
@@ -202,8 +234,9 @@
             result = await result.text();
             console.log(result);
 
-            // Add image to right column, show
+            // Add image to result section, fade in
             document.getElementById('output').src = "data:image/png;base64," + result;
+            document.getElementById('output_column').classList.add('fade-in');
             document.getElementById('output_column').classList.add('d-flex');
 
             // Remove old listener (if present)
