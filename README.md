@@ -24,22 +24,21 @@ Includes a minimalist (137MB) docker image and example docker-compose.yaml with 
 
 1. Add the following to your `docker-compose.yaml`:
 ```
-  qr-webapp:
+  qr-generator:
     image: jamedeus/qr-generator:latest
-    container_name: qr
-    hostname: qr
+    container_name: qr-generator
     ports:
       - 8000:5000
     restart: unless-stopped
 ```
 
-2. Start the app with `docker compose up -d`, the image will be pulled automatically.
+2. Start the app with `docker compose up -d`, the latest version will be pulled automatically.
 
 The app can now be accessed at `http://localhost:8000`.
 
 See the included [docker compose example](/docker-compose.yaml) for reverse proxy configuration. Note that for this to work your router must be configured to redirect `qr.lan/` (or chosen domain) to the IP of your host.
 
-### Docker CLI
+### Docker CLI (not recommended)
 
 The image can also be run from the command line - this is useful for testing, but docker-compose is strongly recommended for deployment.
 
@@ -50,9 +49,9 @@ docker pull jamedeus/qr-generator:latest
 
 2. Run container:
 ```
-docker run -d -p 80:5000 --name qr-generator jamedeus/qr-generator:latest
+docker run -d -p 8000:5000 --name qr-generator jamedeus/qr-generator:latest
 ```
-The app can now be accessed at `http://localhost`.
+The app can now be accessed at `http://localhost:8000`.
 
 ### Local Development Server (not recommended)
 
