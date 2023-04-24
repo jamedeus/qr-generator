@@ -1,9 +1,11 @@
 from unittest import TestCase
-from ContactQr import *
-from WifiQr import *
-from LinkQr import *
+from unittest.mock import patch, MagicMock
+from Qr import Qr
+from ContactQr import ContactQr
+from WifiQr import WifiQr
+from LinkQr import LinkQr
 from app import app
-import json, os
+import json, os, io, base64
 import PIL
 import pyqrcode
 
@@ -13,50 +15,68 @@ class EndpointTests(TestCase):
     def setUp(self):
         self.app = app.test_client()
 
+        # Dummy responses for mock methods
+        self.dummy_font = PIL.ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", 42)
+        self.dummy_image = PIL.Image.new('RGB', (100, 100), color='white')
+
     def test_index(self):
         # Send request, confirm status
         response = self.app.get('/')
         self.assertEqual(response.status_code, 200)
 
-    def test_generate_endpoint(self):
-        # Send request, confirm status
+    def test_generate_contact_qr(self):
+        # Payload sent by frontend
         payload = {'firstName': 'John', 'lastName': 'Doe','phone': '212-555-1234', 'email': 'john.doe@hotmail.com', 'type': 'contact-qr'}
-        response = self.app.post('/generate', json=payload, content_type='application/json')
-        self.assertEqual(response.status_code, 200)
 
-        # Confirm created, clean up
-        self.assertTrue(os.path.exists('John-Doe_contact.png'))
-        os.remove('John-Doe_contact.png')
+        # Patch Qr methods to return dummy font and image
+        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
 
-    def test_wifi_qr(self):
-        # Send request, confirm status
+            # Send post request, confirm status, confirm methods called
+            response = self.app.post('/generate', json=payload, content_type='application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(mock_get_font.call_count, 2)
+            self.assertEqual(mock_add_text.call_count, 1)
+
+            # Confirm response contains base64-encoded PNG
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
+            self.assertEqual(img.format, 'PNG')
+
+    def test_generate_wifi_qr(self):
+        # Payload sent by frontend
         payload = {'ssid': 'AzureDiamond', 'password': 'hunter2', 'type': 'wifi-qr'}
-        response = self.app.post('/generate', json=payload, content_type='application/json')
-        self.assertEqual(response.status_code, 200)
 
-        # Confirm created, clean up
-        self.assertTrue(os.path.exists('AzureDiamond_Wifi_QR.png'))
-        os.remove('AzureDiamond_Wifi_QR.png')
+        # Patch Qr methods to return dummy font and image
+        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
 
-    def test_link_qr(self):
-        # Send request, confirm status
+            # Send post request, confirm status, confirm methods called
+            response = self.app.post('/generate', json=payload, content_type='application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(mock_get_font.call_count, 1)
+            self.assertEqual(mock_add_text.call_count, 1)
+
+            # Confirm response contains base64-encoded PNG
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
+            self.assertEqual(img.format, 'PNG')
+
+    def test_generate_link_qr(self):
+        # Payload sent by frontend
         payload = {'url': 'https://jamedeus.com', 'type': 'link-qr'}
-        response = self.app.post('/generate', json=payload, content_type='application/json')
-        self.assertEqual(response.status_code, 200)
 
-        # Confirm created, clean up
-        self.assertTrue(os.path.exists('jamedeus.com_QR.png'))
-        os.remove('jamedeus.com_QR.png')
+        # Patch Qr methods to return dummy font and image
+        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
 
-    def test_http_link_qr(self):
-        # Send request, confirm status
-        payload = {'url': 'http://jamedeus.com', 'type': 'link-qr'}
-        response = self.app.post('/generate', json=payload, content_type='application/json')
-        self.assertEqual(response.status_code, 200)
+            # Send post request, confirm status, confirm methods called
+            response = self.app.post('/generate', json=payload, content_type='application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(mock_get_font.call_count, 1)
+            self.assertEqual(mock_add_text.call_count, 1)
 
-        # Confirm created, clean up
-        self.assertTrue(os.path.exists('jamedeus.com_QR.png'))
-        os.remove('jamedeus.com_QR.png')
+            # Confirm response contains base64-encoded PNG
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
+            self.assertEqual(img.format, 'PNG')
 
 
 class ContactQrTests(TestCase):
