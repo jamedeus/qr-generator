@@ -1,13 +1,18 @@
+import io
+import os
+import json
+import base64
+
+import PIL
+import pyqrcode
 from unittest import TestCase
 from unittest.mock import patch, MagicMock
+
 from Qr import Qr
 from ContactQr import ContactQr
 from WifiQr import WifiQr
 from LinkQr import LinkQr
 from app import app
-import json, os, io, base64
-import PIL
-import pyqrcode
 
 
 

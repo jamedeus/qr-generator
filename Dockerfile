@@ -18,12 +18,16 @@ ENV PATH="/usr/local/bin:${PATH}"
 
 # Copy node + python dependencies to final build stage
 COPY --from=node_build node_modules/bootstrap/dist/css/bootstrap.min.css /mnt/node_modules/bootstrap/dist/css/bootstrap.min.css
-COPY --from=node_build node_modules/bootstrap/dist/js/bootstrap.min.js /mnt/node_modules/bootstrap/dist/js/bootstrap.min.js
+COPY --from=node_build node_modules/bootstrap/dist/js/bootstrap.bundle.min.js /mnt/node_modules/bootstrap/dist/js/bootstrap.bundle.min.js
+COPY --from=node_build node_modules/bootstrap-icons/font/bootstrap-icons.css /mnt/node_modules/bootstrap-icons/font/bootstrap-icons.css
+COPY --from=node_build node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff /mnt/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff
+COPY --from=node_build node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2 /mnt/node_modules/bootstrap-icons/font/fonts/bootstrap-icons.woff2
 COPY --from=node_build node_modules/smoothscroll-polyfill/dist/smoothscroll.min.js /mnt/node_modules/smoothscroll-polyfill/dist/smoothscroll.min.js
 
 # Copy Ubuntu fonts to final build stage
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf
 
 WORKDIR /mnt/
 
@@ -33,6 +37,9 @@ RUN pip install --no-cache-dir -r /mnt/requirements.txt
 
 # Copy app, run
 COPY app.py /mnt/app.py
+COPY Qr.py /mnt/Qr.py
 COPY ContactQr.py /mnt/ContactQr.py
+COPY WifiQr.py /mnt/WifiQr.py
+COPY LinkQr.py /mnt/LinkQr.py
 COPY templates/ /mnt/templates
 CMD ["gunicorn", "-w", "4", "-b", "0.0.0.0:5000", "app:app"]

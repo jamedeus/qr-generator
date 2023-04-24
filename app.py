@@ -1,12 +1,16 @@
 #!/usr/bin/env python3
 
+import io
+import json
+import base64
+
 from flask import Flask, request, render_template
+
 from ContactQr import ContactQr
 from WifiQr import WifiQr
 from LinkQr import LinkQr
-import json
-import io
-import base64
+
+
 
 app = Flask(__name__, static_url_path='', static_folder='node_modules')
 

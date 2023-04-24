@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Contact QR Code Generator</title>
+    <title>QR Code Generator</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="bootstrap/dist/css/bootstrap.min.css">
@@ -87,7 +87,7 @@
                 <!-- Same height as container to vertically center contents -->
                 <div class="col-md-6 d-flex flex-column justify-content-center py-3 h-100">
 
-                    <!-- Contact Info Form -->
+                    <!-- Contact Info Form, visible on load -->
                     <form id="contact-qr">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="firstName" id="firstName" placeholder="First Name">
@@ -114,7 +114,7 @@
                         </div>
                     </form>
 
-                    <!-- Wifi Form -->
+                    <!-- Wifi Form, hidden on load -->
                     <form id="wifi-qr" class="d-none">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="ssid" id="ssid" placeholder="SSID">
@@ -131,7 +131,7 @@
                         </div>
                     </form>
 
-                    <!-- URL Form -->
+                    <!-- URL Form, hidden on load -->
                     <form id="link-qr" class="d-none">
                         <div class="form-floating mb-3">
                             <input type="text" class="form-control" name="url" id="url" placeholder="" value="https://">
@@ -149,7 +149,7 @@
                 <!-- Hidden before QR loads (prevent scrolling to blank area) -->
                 <div id="output_column" class="col-md-6 flex-column justify-content-center align-items-center py-3 h-100" style="display:none;">
                     <!-- Keep QR vertically centered, hidden button negates download button impact on layout -->
-                    <a style="visibility:hidden;"><button type="submit" class="btn btn-primary mt-3">Download</button></a>
+                    <a style="visibility:hidden;" class="btn btn-primary mb-3">Download</a>
 
                     <!-- Output image + download button -->
                     <img id="output" src=""></img>

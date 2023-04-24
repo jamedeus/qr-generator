@@ -1,7 +1,6 @@
-#!/usr/bin/env python3
+import io
 
 from PIL import Image, ImageDraw, ImageFont
-import io
 
 
 
