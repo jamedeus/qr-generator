@@ -1,6 +1,7 @@
 version: "3.5"
 services:
   nginx-proxy:
+    # Details: https://hub.docker.com/r/jwilder/nginx-proxy
     image: jwilder/nginx-proxy
     container_name: nginx
     ports:
@@ -10,23 +11,14 @@ services:
       - /var/run/docker.sock:/tmp/docker.sock:ro
       - /home/pi/docker/nginx:/etc/nginx/certs
     restart: unless-stopped
-    networks:
-      - reverse_proxy
 
-  qr-webapp:
-    image: qr-webapp:1.0
-    container_name: qr
-    hostname: qr
+  qr-generator:
+    image: jamedeus/qr-generator:latest
+    container_name: qr-generator
+    hostname: qr-generator
     environment:
-      # Reverse proxy domain name
-      - VIRTUAL_HOST=qr.lan
+      # Reverse proxy domain (must redirect to docker host IP)
+      - VIRTUAL_HOST=qr-generator.lan
     ports:
       - 8000:5000
-    networks:
-      - reverse_proxy
     restart: unless-stopped
-
-networks:
-  reverse_proxy:
-    name: reverse_proxy
-    driver: bridge

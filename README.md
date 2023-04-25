@@ -3,44 +3,39 @@
 
 # QR Code Generator
 
-A lightweight, responsive webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
+A lightweight (137MB) webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
 
 Dynamically-sized text is baked into the output image for easy identification.
 
-Includes a minimalist (137MB) docker image and example docker-compose.yaml with pre-written reverse proxy config.
+Multi-arch image available on [Docker Hub](https://hub.docker.com/r/jamedeus/qr-generator), supports x86_64 and arm64.
 
 ## Screenshots
 
 <p align="center">
-  <img src="/img/example1.png" width="30%" alt="Example 1">
-  <img src="/img/example2.png" width="30%" alt="Example 2">
-  <img src="/img/example3.png" width="30%" alt="Example 3">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example1.png" width="30%" alt="Form Example">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example2.png" width="30%" alt="Contact Info Example">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example3.png" width="30%" alt="Wifi Example">
 </p>
-
 
 ## Setup
 
 ### Docker Compose (recommended)
 
-1. Add the following to your `docker-compose.yaml`:
+The included `docker-compose.yaml` can be used as-is, simply clone the repo and start it:
 ```
-  qr-generator:
-    image: jamedeus/qr-generator:latest
-    container_name: qr-generator
-    ports:
-      - 8000:5000
-    restart: unless-stopped
+git clone https://gitlab.com/jamedeus/qr-generator.git
+cd qr-generator
+docker compose up -d
 ```
+The app can now be accessed at [http://localhost:8000](http://localhost:8000).
 
-2. Start the app with `docker compose up -d`, the latest version will be pulled automatically.
+To use the included reverse proxy, configure your local DNS to redirect `qr-generator.lan/` to the IP of your docker host.
 
-The app can now be accessed at `http://localhost:8000`.
-
-See the included [docker compose example](/docker-compose.yaml) for reverse proxy configuration. Note that for this to work your router must be configured to redirect `qr.lan/` (or chosen domain) to the IP of your host.
+If you have an existing `docker-compose.yaml`, see the [example config](/docker-compose.yaml).
 
 ### Docker CLI (not recommended)
 
-The image can also be run from the command line - this is useful for testing, but docker-compose is strongly recommended for deployment.
+Running from the command line can be useful for testing, but docker-compose is strongly recommended for deployment.
 
 1. Pull image from Docker Hub:
 ```
@@ -51,7 +46,7 @@ docker pull jamedeus/qr-generator:latest
 ```
 docker run -d -p 8000:5000 --name qr-generator jamedeus/qr-generator:latest
 ```
-The app can now be accessed at `http://localhost:8000`.
+The app can now be accessed at [http://localhost:8000](http://localhost:8000).
 
 ### Local Development Server (not recommended)
 
@@ -72,7 +67,7 @@ npm install
 ./app.py
 ```
 
-The app can now be accessed at `http://localhost:5000`.
+The app can now be accessed at [http://localhost:5000](http://localhost:5000).
 
 To build the docker image run:
 ```
