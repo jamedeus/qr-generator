@@ -5,7 +5,7 @@ from Qr import Qr
 
 
 class LinkQr(Qr):
-    def __init__(self, url):
+    def __init__(self, url, text=None):
         self.url = url.strip()
 
         # Remove protocol, set attribute for inherited save method
@@ -27,6 +27,11 @@ class LinkQr(Qr):
         self.caption = [
             {'text': self.filename[:-3], 'font': font}
         ]
+
+        # If text given add above URL in bold + larger font
+        if text:
+            font = self.get_font(text, "/usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf", 72)
+            self.caption.insert(0, {'text': text, 'font': font})
 
         # Add caption to QR Image
         self.qr_complete = self.add_text()

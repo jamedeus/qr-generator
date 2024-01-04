@@ -31,7 +31,7 @@ def generate():
         qr = WifiQr(data['ssid'], data['password'])
 
     elif data['type'] == 'link-qr':
-        qr = LinkQr(data['url'])
+        qr = LinkQr(data['url'], data['text'])
 
     # Save PNG to memory buffer, convert to base64 string
     buffered = io.BytesIO()

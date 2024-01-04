@@ -67,7 +67,7 @@ class EndpointTests(TestCase):
 
     def test_generate_link_qr(self):
         # Payload sent by frontend
-        payload = {'url': 'https://jamedeus.com', 'type': 'link-qr'}
+        payload = {'url': 'https://jamedeus.com', 'text': '', 'type': 'link-qr'}
 
         # Patch Qr methods to return dummy font and image
         with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
@@ -77,6 +77,24 @@ class EndpointTests(TestCase):
             response = self.app.post('/generate', json=payload, content_type='application/json')
             self.assertEqual(response.status_code, 200)
             self.assertEqual(mock_get_font.call_count, 1)
+            self.assertEqual(mock_add_text.call_count, 1)
+
+            # Confirm response contains base64-encoded PNG
+            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
+            self.assertEqual(img.format, 'PNG')
+
+    def test_generate_link_with_text(self):
+        # Payload sent by frontend
+        payload = {'url': 'https://jamedeus.com', 'text': 'Homepage', 'type': 'link-qr'}
+
+        # Patch Qr methods to return dummy font and image
+        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+
+            # Send post request, confirm status, confirm methods called
+            response = self.app.post('/generate', json=payload, content_type='application/json')
+            self.assertEqual(response.status_code, 200)
+            self.assertEqual(mock_get_font.call_count, 2)
             self.assertEqual(mock_add_text.call_count, 1)
 
             # Confirm response contains base64-encoded PNG
