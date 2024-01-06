@@ -20,7 +20,7 @@ class LinkQr(Qr):
         super().__init__()
 
         # Get font, remove protocol and "_QR" from caption for readability
-        font = self.get_font(self.filename[:-3], "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 42)
+        font = self.get_font(self.filename[:-3], self.mono_font, 42)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image
@@ -30,7 +30,7 @@ class LinkQr(Qr):
 
         # If text given add above URL in bold + larger font
         if text:
-            font = self.get_font(text, "/usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf", 72)
+            font = self.get_font(text, self.mono_font_bold, 72)
             self.caption.insert(0, {'text': text, 'font': font})
 
         # Add caption to QR Image

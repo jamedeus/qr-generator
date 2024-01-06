@@ -19,11 +19,11 @@ class ContactQr(Qr):
 
         # Create name string, get font size
         name = f"{self.first_name} {self.last_name}"
-        name_font = self.get_font(name, "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf", 42)
+        name_font = self.get_font(name, self.sans_font_bold, 42)
 
         # Create contact info string, get font size (at least 6 points smaller than name)
         info = f"{self.email}\n{self.phone}"
-        info_font = self.get_font(info, "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", name_font.size-6)
+        info_font = self.get_font(info, self.sans_font, name_font.size-6)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image

@@ -7,6 +7,12 @@ from PIL import Image, ImageDraw, ImageFont
 # Base class for all QR generators
 class Qr():
     def __init__(self):
+        # Font paths
+        self.mono_font = "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf"
+        self.mono_font_bold = "/usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf"
+        self.sans_font = "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf"
+        self.sans_font_bold = "/usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf"
+
         # Generate QR code + PNG in memory buffer
         self.qr_raw = self.generate_qr_code()
         self.qr_image = self.generate_qr_image()

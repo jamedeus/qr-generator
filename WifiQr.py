@@ -35,7 +35,7 @@ class WifiQr(Qr):
             ssid = f"SSID: {' '*padding_front}{self.ssid}{' '*padding}"
             password = f"PASS: {self.password}"
 
-        font = self.get_font(ssid, "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf", 64)
+        font = self.get_font(ssid, self.mono_font, 64)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image
