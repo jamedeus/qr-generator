@@ -167,13 +167,17 @@
     <script>
         function sleep(ms) {
             return new Promise(resolve => setTimeout(resolve, ms));
-        };
+        }
 
         // Change visible form when top-right menu used
         async function change_form(el) {
             // Hide all forms, mark all dropdown options inactive
-            document.querySelectorAll('form').forEach(function(f){f.classList.add('d-none')});
-            document.querySelectorAll('.dropdown-item').forEach(function(f){f.classList.remove('active')});
+            document.querySelectorAll('form').forEach((f) => {
+                f.classList.add('d-none');
+            });
+            document.querySelectorAll('.dropdown-item').forEach((f) => {
+                f.classList.remove('active');
+            });
 
             // Show requested form, mark clicked option active
             document.getElementById(el.dataset.target).classList.remove('d-none');
@@ -188,7 +192,7 @@
             await sleep(468);
             document.getElementById('output_column').classList.remove('d-flex');
             document.getElementById('output_column').classList.remove('fade-out');
-        };
+        }
 
         // Add invalid highlight + listener to remove highlight on input
         function markInvalid(element) {
@@ -196,28 +200,30 @@
             element.addEventListener("input", (e) => {
                 e.target.classList.remove("is-invalid");
             }, { once: true });
-        };
+        }
 
         // Takes form data, marks invalid fields, returns true if all valid
         function isValid(data) {
             let valid = true;
 
             // Invalid if any fields fail regex
-            for (i in data) {
+            for (let i in data) {
                 if (!document.getElementById(i).validity.valid) {
                     markInvalid(document.getElementById(i));
                     valid = false;
-                };
-            };
+                }
+            }
 
             return valid;
-        };
+        }
 
         // Called by generate buttons, takes ID of form as argument
         async function generate(type) {
             // Get form data, validate
             const data = Object.fromEntries(new FormData(document.querySelector(`#${type}`)).entries());
-            if (!isValid(data)) {return false};
+            if (!isValid(data)) {
+                return false;
+            }
             console.log(data);
 
             // Add QR type
@@ -227,8 +233,10 @@
             var result = await fetch('/generate', {
                 method: 'POST',
                 body: JSON.stringify(data),
-                headers: { 'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json' }
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                }
             });
 
             result = await result.text();
@@ -247,7 +255,7 @@
 
             // Scroll to result section (mobile)
             document.getElementById('download').scrollIntoView({behavior: "smooth"});
-        };
+        }
 
         // Decodes base64 image string from event to binary, serves download
         function downloadQR(event) {
@@ -261,7 +269,7 @@
             // Read bytes into array
             for (let i = 0; i < imageData.length; i++) {
                 imageBytes[i] = imageData.charCodeAt(i);
-            };
+            }
 
             // Create blob object from buffer, set MIME type
             const qr = new Blob([imageBytes], { type: 'image/png' });
@@ -269,7 +277,7 @@
             // Set download url and filename, downloads immediately
             event.target.href = URL.createObjectURL(qr);
             event.target.download = `${this.type}.png`;
-        };
+        }
 
         // Format phone number as user types
         document.getElementById('phone').addEventListener('input', function(event) {
@@ -282,17 +290,22 @@
             const last = input.substring(6,10);
 
             // Format based on current length
-            if (input.length > 6) { event.target.value = `(${areaCode}) ${middle}-${last}`; }
-            else if (input.length > 3) { event.target.value = `(${areaCode}) ${middle}`; }
-            else if (input.length > 0) { event.target.value = `(${areaCode}`; }
-            else if (input.length == 0) { event.target.value = ``; };
+            if (input.length > 6) {
+                event.target.value = `(${areaCode}) ${middle}-${last}`;
+            } else if (input.length > 3) {
+                event.target.value = `(${areaCode}) ${middle}`;
+            } else if (input.length > 0) {
+                event.target.value = `(${areaCode}`;
+            } else if (input.length == 0) {
+                event.target.value = ``;
+            }
         });
 
         // Allow all characters except spaces in email field
         document.getElementById('email').addEventListener('keydown', function(event) {
             if (event.code === 'Space') {
                 event.preventDefault();
-            };
+            }
         });
 
         // Press enter to generate
@@ -301,14 +314,14 @@
                 if (event.key === "Enter") {
                     event.preventDefault();
                     generate(form.id);
-                };
+                }
             });
         });
 
         // Check if user is in dark mode, change theme (runs once on page load)
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.setAttribute('data-bs-theme','dark');
-        };
+        }
 
         // Listen for system theme changes, switch to dark/light mode to reflect (responsive)
         window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
