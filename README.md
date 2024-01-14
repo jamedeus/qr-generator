@@ -58,13 +58,13 @@ cd qr-generator
 
 2. Install dependencies:
 ```
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 npm install
 ```
 
 3. Run:
 ```
-./app.py
+./backend/app.py
 ```
 
 The app can now be accessed at [http://localhost:5000](http://localhost:5000).

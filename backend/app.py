@@ -12,7 +12,12 @@ from LinkQr import LinkQr
 
 
 
-app = Flask(__name__, static_url_path='', static_folder='node_modules')
+app = Flask(
+    __name__,
+    static_url_path='',
+    static_folder='../node_modules',
+    template_folder='../templates'
+)
 
 @app.get("/")
 def serve():
