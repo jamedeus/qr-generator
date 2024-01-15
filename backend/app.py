@@ -14,8 +14,7 @@ from LinkQr import LinkQr
 
 app = Flask(
     __name__,
-    static_url_path='',
-    static_folder='../node_modules',
+    static_folder='../dist',
     template_folder='../templates'
 )
 
@@ -48,4 +47,4 @@ def generate():
 
 
 if __name__ == '__main__':
-    app.run(host= '0.0.0.0', debug=True)
+    app.run(host= '0.0.0.0', port='8123', debug=True)

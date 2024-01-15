@@ -1,0 +1,45 @@
+/* Limit width for readability on large screen sizes */
+@media (min-width: 1200px) {
+    .container {
+        width: 960px;
+    }
+}
+
+/* Scale output image */
+#output {
+width: 100%;
+height: auto;
+}
+
+/* Remove top right corner button border */
+#menu_button {
+border: 0px;
+}
+
+/* Fade out results column while changing type */
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.fade-out {
+    animation: fade-out 0.25s ease-out forwards;
+}
+
+/* Fade in generated QR code */
+@keyframes fade-in {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fade-in 0.25s ease forwards;
+}
