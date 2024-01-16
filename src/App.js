@@ -14,18 +14,9 @@ function App() {
     // State object for QR code visibility (controls fade effect)
     const [qrVisible, setQrVisible] = useState(false);
 
-    const showContact = () => {
-        setQrType("contact");
-        resetQR();
-    }
-
-    const showWifi = () => {
-        setQrType("wifi");
-        resetQR();
-    }
-
-    const showLink = () => {
-        setQrType("link");
+    // Takes type string, shows correct form and hides old QR code (if present)
+    const showForm = (type) => {
+        setQrType(type);
         resetQR();
     }
 
@@ -119,17 +110,17 @@ function App() {
                         <button type="button" className="btn" id="menu_button" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi-list" style={{color: "#fff"}}></i></button>
                         <ul id="settings_menu" className="dropdown-menu dropdown-menu-end" aria-labelledby="settings_button">
                             <li>
-                                <a className={"dropdown-item " + (qrType === "contact" ? "active" : "")} onClick={showContact}>
+                                <a className={"dropdown-item " + (qrType === "contact" ? "active" : "")} onClick={(() => {showForm('contact')})}>
                                     <i className="bi bi-person-lines-fill me-3"></i>Contact
                                 </a>
                             </li>
                             <li>
-                                <a className={"dropdown-item " + (qrType === "wifi" ? "active" : "")} onClick={showWifi}>
+                                <a className={"dropdown-item " + (qrType === "wifi" ? "active" : "")} onClick={(() => {showForm('wifi')})}>
                                     <i className="bi bi-wifi me-3"></i>Wifi
                                 </a>
                             </li>
                             <li>
-                                <a className={"dropdown-item " + (qrType === "link" ? "active" : "")} onClick={showLink}>
+                                <a className={"dropdown-item " + (qrType === "link" ? "active" : "")} onClick={(() => {showForm('link')})}>
                                     <i className="bi bi-link-45deg me-3"></i>Link
                                 </a>
                             </li>
