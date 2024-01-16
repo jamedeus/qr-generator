@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-
 
 function ContactForm({ onSubmit }) {
     // Create form validation state object
@@ -76,8 +76,11 @@ function ContactForm({ onSubmit }) {
                 </Button>
             </div>
         </Form>
-    )
+    );
 }
 
+ContactForm.propTypes = {
+    onSubmit: PropTypes.func,
+};
 
 export default ContactForm;

@@ -3,7 +3,6 @@ import ContactForm from './ContactForm';
 import WifiForm from './WifiForm';
 import LinkForm from './LinkForm';
 
-
 function App() {
     // Default to contact QR code form
     const [qrType, setQrType] = useState('contact');
@@ -18,7 +17,7 @@ function App() {
     const showForm = (type) => {
         setQrType(type);
         resetQR();
-    }
+    };
 
     // Fades out QR code, clears QR string once animation complete
     const resetQR = () => {
@@ -26,7 +25,7 @@ function App() {
         setTimeout(() => {
             setQrString("");
         }, 468);
-    }
+    };
 
     // Add fade in/out classes when QR code visibility changes
     // Mobile: Scroll to bottom when QR shown, scroll to top when hidden
@@ -50,7 +49,7 @@ function App() {
         e.preventDefault();
 
         // Get form data, add QR type
-        const data = Object.fromEntries(new FormData(e.target).entries())
+        const data = Object.fromEntries(new FormData(e.target).entries());
         data['type'] = `${qrType}-qr`;
         console.log(data);
 
@@ -110,17 +109,17 @@ function App() {
                         <button type="button" className="btn" id="menu_button" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi-list" style={{color: "#fff"}}></i></button>
                         <ul id="settings_menu" className="dropdown-menu dropdown-menu-end" aria-labelledby="settings_button">
                             <li>
-                                <a className={"dropdown-item " + (qrType === "contact" ? "active" : "")} onClick={(() => {showForm('contact')})}>
+                                <a className={"dropdown-item " + (qrType === "contact" ? "active" : "")} onClick={(() => {showForm('contact');})}>
                                     <i className="bi bi-person-lines-fill me-3"></i>Contact
                                 </a>
                             </li>
                             <li>
-                                <a className={"dropdown-item " + (qrType === "wifi" ? "active" : "")} onClick={(() => {showForm('wifi')})}>
+                                <a className={"dropdown-item " + (qrType === "wifi" ? "active" : "")} onClick={(() => {showForm('wifi');})}>
                                     <i className="bi bi-wifi me-3"></i>Wifi
                                 </a>
                             </li>
                             <li>
-                                <a className={"dropdown-item " + (qrType === "link" ? "active" : "")} onClick={(() => {showForm('link')})}>
+                                <a className={"dropdown-item " + (qrType === "link" ? "active" : "")} onClick={(() => {showForm('link');})}>
                                     <i className="bi bi-link-45deg me-3"></i>Link
                                 </a>
                             </li>
@@ -160,8 +159,7 @@ function App() {
                 </div>
             </div>
         </div>
-    )
+    );
 }
-
 
 export default App;

@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
-
 
 function WifiForm({ onSubmit }) {
     // Create form validation state object
@@ -39,8 +39,11 @@ function WifiForm({ onSubmit }) {
                 </Button>
             </div>
         </Form>
-    )
+    );
 }
 
+WifiForm.propTypes = {
+    onSubmit: PropTypes.func,
+};
 
 export default WifiForm;
