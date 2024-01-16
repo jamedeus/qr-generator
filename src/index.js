@@ -2,6 +2,7 @@ import React from 'react';
 import { createRoot } from 'react-dom/client';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-icons/font/bootstrap-icons.css';
+import 'smoothscroll-polyfill/dist/smoothscroll.min.js';
 import './style.css';
 import './darkMode.js';
 import App from './App';

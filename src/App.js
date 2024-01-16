@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ContactForm from './ContactForm';
 import WifiForm from './WifiForm';
 import LinkForm from './LinkForm';
@@ -11,20 +11,48 @@ function App() {
     // State object for base64 QR code string
     const [qrString, setQrString] = useState('');
 
+    // State object for QR code visibility (controls fade effect)
+    const [qrVisible, setQrVisible] = useState(false);
+
     const showContact = () => {
         setQrType("contact");
-        setQrString("");
+        resetQR();
     }
 
     const showWifi = () => {
         setQrType("wifi");
-        setQrString("");
+        resetQR();
     }
 
     const showLink = () => {
         setQrType("link");
-        setQrString("");
+        resetQR();
     }
+
+    // Fades out QR code, clears QR string once animation complete
+    const resetQR = () => {
+        setQrVisible(false);
+        setTimeout(() => {
+            setQrString("");
+        }, 468);
+    }
+
+    // Add fade in/out classes when QR code visibility changes
+    // Mobile: Scroll to bottom when QR shown, scroll to top when hidden
+    useEffect(() => {
+        const outputColumn = document.getElementById('output_column');
+        const downloadButton = document.getElementById('download');
+        if (qrVisible) {
+            outputColumn.classList.remove('fade-out');
+            outputColumn.classList.add('fade-in');
+            downloadButton.scrollIntoView({behavior: "smooth"});
+
+        } else {
+            outputColumn.classList.remove('fade-in');
+            outputColumn.classList.add('fade-out');
+            window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+        }
+    });
 
     // Called by generate buttons, takes submit event as arg
     async function generate(e) {
@@ -45,9 +73,14 @@ function App() {
             }
         });
 
+        const outputColumn = document.getElementById('output_column');
+        outputColumn.classList.remove('d-none');
+        outputColumn.classList.add('d-flex');
+
         // Write result string to state object (shows QR image)
         result = await result.text();
         setQrString(result);
+        setQrVisible(true);
         console.log(result);
     }
 
@@ -125,13 +158,13 @@ function App() {
                         })()}
                     </div>
 
-                    <div id="output_column" className={(qrString ? "col-md-6 d-flex flex-column justify-content-center align-items-center py-3 h-100" : "d-none")}>
+                    <div id="output_column" className="col-md-6 d-none flex-column justify-content-center align-items-center py-3 h-100">
                         {/* Keep QR vertically centered, hidden button negates download button impact on layout */}
                         <a style={{visibility: "hidden"}} className="btn btn-primary mb-3">Download</a>
 
                         {/* Output image + download button */}
                         <img id="output" src={"data:image/png;base64," + qrString}></img>
-                        <a className="btn btn-primary mb-3" onClick={downloadQR}>Download</a>
+                        <a id="download" className="btn btn-primary mb-3" onClick={downloadQR}>Download</a>
                     </div>
                 </div>
             </div>
