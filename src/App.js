@@ -112,19 +112,19 @@ function App() {
                     <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
-                    <Dropdown>
+                    <Dropdown align="end">
                         <Dropdown.Toggle className="my-auto">
                             <i className="bi-list"></i>
                         </Dropdown.Toggle>
 
                         <Dropdown.Menu>
-                            <Dropdown.Item onClick={(() => {showForm('contact');})}>
+                            <Dropdown.Item onClick={(() => {showForm('contact');})} active={qrType === "contact"}>
                                 <i className="bi bi-person-lines-fill me-3"></i>Contact
                             </Dropdown.Item>
-                            <Dropdown.Item onClick={(() => {showForm('wifi');})}>
+                            <Dropdown.Item onClick={(() => {showForm('wifi');})} active={qrType === "wifi"}>
                                 <i className="bi bi-wifi me-3"></i>Wifi
                             </Dropdown.Item>
-                            <Dropdown.Item onClick={(() => {showForm('link');})}>
+                            <Dropdown.Item onClick={(() => {showForm('link');})} active={qrType === "link"}>
                                 <i className="bi bi-link-45deg me-3"></i>Link
                             </Dropdown.Item>
                         </Dropdown.Menu>
