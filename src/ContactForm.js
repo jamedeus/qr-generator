@@ -1,10 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 
 
 function ContactForm({ onSubmit }) {
+    // Create form validation state object
+    const [validated, setValidated] = useState(false);
+
+    // Wrap submit handler, validate fields before calling
+    const handleSubmit = (event) => {
+        // Prevent submitting with invalid fields
+        if (event.currentTarget.checkValidity() === false) {
+            event.preventDefault();
+            event.stopPropagation();
+        // Pass event to submit handler if all fields valid
+        } else {
+            onSubmit(event);
+        }
+
+        // Show validation highlights
+        setValidated(true);
+    };
+
     // Format phone number as user types
     function formatPhone(event) {
         // Remove all non-numeric characters, 10 digits max
@@ -35,21 +53,21 @@ function ContactForm({ onSubmit }) {
     }
 
     return (
-        <Form onSubmit={onSubmit}>
+        <Form noValidate validated={validated} onSubmit={handleSubmit}>
             <FloatingLabel label="First Name" className="mb-3">
-                <Form.Control type="text" name="firstName" placeholder="First Name" />
+                <Form.Control type="text" name="firstName" placeholder="First Name" required />
             </FloatingLabel>
 
             <FloatingLabel label="Last Name" className="mb-3">
-                <Form.Control type="text" name="lastName" placeholder="Last Name" />
+                <Form.Control type="text" name="lastName" placeholder="Last Name" required />
             </FloatingLabel>
 
             <FloatingLabel label="Email" className="mb-3">
-                <Form.Control type="email" name="email" placeholder="Email" onKeyDown={formatEmail} />
+                <Form.Control type="email" name="email" placeholder="Email" onKeyDown={formatEmail} required />
             </FloatingLabel>
 
             <FloatingLabel label="Phone" className="mb-3">
-                <Form.Control type="tel" name="phone" placeholder="Phone" onChange={formatPhone} />
+                <Form.Control type="tel" name="phone" placeholder="Phone" onChange={formatPhone} pattern="^(\d{10}|\(\d{3}\) \d{3}-\d{4})$" required />
             </FloatingLabel>
 
             <div className="d-flex">
