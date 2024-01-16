@@ -1,30 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
 import Button from 'react-bootstrap/Button';
 
-function LinkForm({ onSubmit }) {
-    // Create form validation state object
-    const [validated, setValidated] = useState(false);
-
-    // Wrap submit handler, validate fields before calling
-    const handleSubmit = (event) => {
-        // Prevent submitting with invalid fields
-        if (event.currentTarget.checkValidity() === false) {
-            event.preventDefault();
-            event.stopPropagation();
-            // Pass event to submit handler if all fields valid
-        } else {
-            onSubmit(event);
-        }
-
-        // Show validation highlights
-        setValidated(true);
-    };
-
+function LinkForm({ generate, validated }) {
     return (
-        <Form noValidate validated={validated} onSubmit={handleSubmit}>
+        <Form noValidate validated={validated} onSubmit={generate}>
             <FloatingLabel label="URL" className="mb-3">
                 <Form.Control type="text" name="url" placeholder="URL" required />
             </FloatingLabel>
@@ -43,7 +25,8 @@ function LinkForm({ onSubmit }) {
 }
 
 LinkForm.propTypes = {
-    onSubmit: PropTypes.func,
+    generate: PropTypes.func,
+    validated: PropTypes.bool
 };
 
 export default LinkForm;

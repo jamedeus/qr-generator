@@ -19,9 +19,14 @@ function App() {
     // State object for QR code visibility (controls fade effect)
     const [qrVisible, setQrVisible] = useState(false);
 
-    // Takes type string, shows correct form and hides old QR code (if present)
+    // Create form validation state object
+    const [validated, setValidated] = useState(false);
+
+    // Takes type string (contact, wifi, or link)
+    // Shows correct form, resets validation, and hides old QR code (if present)
     const showForm = (type) => {
         setQrType(type);
+        setValidated(false);
         resetQR();
     };
 
@@ -51,11 +56,18 @@ function App() {
     });
 
     // Called by generate buttons, takes submit event as arg
-    async function generate(e) {
-        e.preventDefault();
+    async function generate(event) {
+        // Prevent page refresh when form submitted
+        event.preventDefault();
+
+        // Show validation highlights, don't generate if form has invalid fields
+        setValidated(true);
+        if (event.currentTarget.checkValidity() === false) {
+            return false;
+        }
 
         // Get form data, add QR type
-        const data = Object.fromEntries(new FormData(e.target).entries());
+        const data = Object.fromEntries(new FormData(event.target).entries());
         data['type'] = `${qrType}-qr`;
         console.log(data);
 
@@ -69,6 +81,7 @@ function App() {
             }
         });
 
+        // Show output column if hidden
         const outputColumn = document.getElementById('output_column');
         outputColumn.classList.remove('d-none');
         outputColumn.classList.add('d-flex');
@@ -141,11 +154,11 @@ function App() {
                         {(() => {
                             switch(qrType) {
                                 case "contact":
-                                    return <ContactForm onSubmit={generate} />;
+                                    return <ContactForm generate={generate} validated={validated} />;
                                 case "wifi":
-                                    return <WifiForm onSubmit={generate} />;
+                                    return <WifiForm generate={generate} validated={validated} />;
                                 case "link":
-                                    return <LinkForm onSubmit={generate} />;
+                                    return <LinkForm generate={generate} validated={validated} />;
                                 default:
                                     return null;
                             }
