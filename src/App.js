@@ -1,4 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Button from 'react-bootstrap/Button';
+import Navbar from 'react-bootstrap/Navbar';
+import Dropdown from 'react-bootstrap/Dropdown';
+import Container from 'react-bootstrap/Container';
 import ContactForm from './ContactForm';
 import WifiForm from './WifiForm';
 import LinkForm from './LinkForm';
@@ -99,41 +105,39 @@ function App() {
     return (
         <div className="d-flex flex-column vh-100">
             {/* Fixed nav bar reserves space */}
-            <nav className="navbar navbar-dark bg-primary fixed-top">
-                <div className="container-fluid">
-                    <button type="button" className="btn" style={{visibility: "hidden"}}><i className="bi-list"></i></button>
-                    <h1 className="mb-0 navbar-brand mx-auto">QR Code Generator</h1>
+            <Navbar fixed="top" variant="dark" className="bg-primary">
+                <Container fluid>
+                    {/* Hidden button keeps title centered*/}
+                    <Button style={{visibility: "hidden"}}><i className="bi-list"></i></Button>
+                    <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
-                    <div className="dropdown my-auto">
-                        <button type="button" className="btn" id="menu_button" data-bs-toggle="dropdown" aria-expanded="false"><i className="bi-list" style={{color: "#fff"}}></i></button>
-                        <ul id="settings_menu" className="dropdown-menu dropdown-menu-end" aria-labelledby="settings_button">
-                            <li>
-                                <a className={"dropdown-item " + (qrType === "contact" ? "active" : "")} onClick={(() => {showForm('contact');})}>
-                                    <i className="bi bi-person-lines-fill me-3"></i>Contact
-                                </a>
-                            </li>
-                            <li>
-                                <a className={"dropdown-item " + (qrType === "wifi" ? "active" : "")} onClick={(() => {showForm('wifi');})}>
-                                    <i className="bi bi-wifi me-3"></i>Wifi
-                                </a>
-                            </li>
-                            <li>
-                                <a className={"dropdown-item " + (qrType === "link" ? "active" : "")} onClick={(() => {showForm('link');})}>
-                                    <i className="bi bi-link-45deg me-3"></i>Link
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </nav>
+                    <Dropdown>
+                        <Dropdown.Toggle className="my-auto">
+                            <i className="bi-list"></i>
+                        </Dropdown.Toggle>
+
+                        <Dropdown.Menu>
+                            <Dropdown.Item onClick={(() => {showForm('contact');})}>
+                                <i className="bi bi-person-lines-fill me-3"></i>Contact
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={(() => {showForm('wifi');})}>
+                                <i className="bi bi-wifi me-3"></i>Wifi
+                            </Dropdown.Item>
+                            <Dropdown.Item onClick={(() => {showForm('link');})}>
+                                <i className="bi bi-link-45deg me-3"></i>Link
+                            </Dropdown.Item>
+                        </Dropdown.Menu>
+                    </Dropdown>
+                </Container>
+            </Navbar>
 
             {/* Container reserves remaining space */}
-            <div className="container d-flex flex-column h-100">
+            <Container className="d-flex flex-column h-100">
                 {/* Side by side on desktop, stacked on mobile */}
-                <div className="row h-100">
+                <Row className="h-100">
                     {/* Same height as container to vertically center contents */}
-                    <div className="col-md-6 d-flex flex-column justify-content-center py-3 h-100">
+                    <Col md={6} className="d-flex flex-column justify-content-center py-3 h-100">
                         {(() => {
                             switch(qrType) {
                                 case "contact":
@@ -146,18 +150,20 @@ function App() {
                                     return null;
                             }
                         })()}
-                    </div>
+                    </Col>
 
-                    <div id="output_column" className="col-md-6 d-none flex-column justify-content-center align-items-center py-3 h-100">
+                    <Col id="output_column" md={6} className="d-none flex-column justify-content-center align-items-center py-3 h-100">
                         {/* Keep QR vertically centered, hidden button negates download button impact on layout */}
-                        <a style={{visibility: "hidden"}} className="btn btn-primary mb-3">Download</a>
+                        <Button variant="primary" as="a" className="mb-3" style={{visibility: "hidden"}}>Download</Button>
 
                         {/* Output image + download button */}
                         <img id="output" src={"data:image/png;base64," + qrString}></img>
-                        <a id="download" className="btn btn-primary mb-3" onClick={downloadQR}>Download</a>
-                    </div>
-                </div>
-            </div>
+                        <Button id="download" variant="primary" as="a" className="mb-3" onClick={downloadQR}>
+                            Download
+                        </Button>
+                    </Col>
+                </Row>
+            </Container>
         </div>
     );
 }

@@ -43,3 +43,8 @@ border: 0px;
 .fade-in {
     animation: fade-in 0.25s ease forwards;
 }
+
+/* Hide down arrow on dropdown toggle */
+.dropdown-toggle::after {
+    display: none;
+}
