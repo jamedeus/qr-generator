@@ -56,10 +56,11 @@ git clone https://gitlab.com/jamedeus/qr-generator.git
 cd qr-generator
 ```
 
-2. Install dependencies:
+2. Install dependencies and build the frontend:
 ```
 pip install -r backend/requirements.txt
 npm install
+npm run build
 ```
 
 3. Run:
@@ -68,6 +69,8 @@ npm install
 ```
 
 The app can now be accessed at [http://localhost:5000](http://localhost:5000).
+
+To automatically rebuild the frontend when changes are made run `npm run build:dev`.
 
 To build the docker image run:
 ```
