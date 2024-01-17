@@ -37,19 +37,42 @@ function ContactForm({ generate, validated }) {
     return (
         <Form noValidate validated={validated} onSubmit={generate}>
             <FloatingLabel label="First Name" className="mb-3">
-                <Form.Control type="text" name="firstName" placeholder="First Name" required />
+                <Form.Control
+                    type="text"
+                    name="firstName"
+                    placeholder="First Name"
+                    required
+                />
             </FloatingLabel>
 
             <FloatingLabel label="Last Name" className="mb-3">
-                <Form.Control type="text" name="lastName" placeholder="Last Name" required />
+                <Form.Control
+                    type="text"
+                    name="lastName"
+                    placeholder="Last Name"
+                    required
+                />
             </FloatingLabel>
 
             <FloatingLabel label="Email" className="mb-3">
-                <Form.Control type="email" name="email" placeholder="Email" onKeyDown={formatEmail} required />
+                <Form.Control
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    onKeyDown={formatEmail}
+                    required
+                />
             </FloatingLabel>
 
             <FloatingLabel label="Phone" className="mb-3">
-                <Form.Control type="tel" name="phone" placeholder="Phone" onChange={formatPhone} pattern="^(\d{10}|\(\d{3}\) \d{3}-\d{4})$" required />
+                <Form.Control
+                    type="tel"
+                    name="phone"
+                    placeholder="Phone"
+                    onChange={formatPhone}
+                    pattern="^(\d{10}|\(\d{3}\) \d{3}-\d{4})$"
+                    required
+                />
             </FloatingLabel>
 
             <div className="d-flex">

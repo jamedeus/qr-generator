@@ -8,11 +8,20 @@ function LinkForm({ generate, validated }) {
     return (
         <Form noValidate validated={validated} onSubmit={generate}>
             <FloatingLabel label="URL" className="mb-3">
-                <Form.Control type="text" name="url" placeholder="URL" required />
+                <Form.Control
+                    type="text"
+                    name="url"
+                    placeholder="URL"
+                    required
+                />
             </FloatingLabel>
 
             <FloatingLabel label="Text" className="mb-3">
-                <Form.Control type="text" name="text" placeholder="Optional" />
+                <Form.Control
+                    type="text"
+                    name="text"
+                    placeholder="Optional"
+                />
             </FloatingLabel>
 
             <div className="d-flex">

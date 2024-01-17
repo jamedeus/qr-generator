@@ -8,11 +8,21 @@ function WifiForm({ generate, validated }) {
     return (
         <Form noValidate validated={validated} onSubmit={generate}>
             <FloatingLabel label="SSID" className="mb-3">
-                <Form.Control type="text" name="ssid" placeholder="SSID" required />
+                <Form.Control
+                    type="text"
+                    name="ssid"
+                    placeholder="SSID"
+                    required
+                />
             </FloatingLabel>
 
             <FloatingLabel label="Password" className="mb-3">
-                <Form.Control type="password" name="password" placeholder="Password" required />
+                <Form.Control
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                />
             </FloatingLabel>
 
             <div className="d-flex">

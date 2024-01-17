@@ -23,7 +23,7 @@ function App() {
     const [validated, setValidated] = useState(false);
 
     // Takes type string (contact, wifi, or link)
-    // Shows correct form, resets validation, and hides old QR code (if present)
+    // Shows chosen form, resets validation, and hides old QR code (if present)
     const showForm = (type) => {
         setQrType(type);
         setValidated(false);
@@ -41,17 +41,21 @@ function App() {
     // Add fade in/out classes when QR code visibility changes
     // Mobile: Scroll to bottom when QR shown, scroll to top when hidden
     useEffect(() => {
-        const outputColumn = document.getElementById('output_column');
-        const downloadButton = document.getElementById('download');
+        const outputColumn = document.getElementById('output_col');
         if (qrVisible) {
+            // Show output column if hidden
+            outputColumn.classList.remove('d-none');
+            outputColumn.classList.add('d-flex');
+            // Start fade in effect, scroll to bottom
             outputColumn.classList.remove('fade-out');
             outputColumn.classList.add('fade-in');
-            downloadButton.scrollIntoView({behavior: "smooth"});
+            window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
 
         } else {
+            // Start fade out effect, scroll to top
             outputColumn.classList.remove('fade-in');
             outputColumn.classList.add('fade-out');
-            window.scroll({ top: 0, left: 0, behavior: 'smooth' });
+            window.scroll({ top: 0, behavior: 'smooth' });
         }
     });
 
@@ -60,7 +64,7 @@ function App() {
         // Prevent page refresh when form submitted
         event.preventDefault();
 
-        // Show validation highlights, don't generate if form has invalid fields
+        // Show validation highlights, don't generate if invalid fields present
         setValidated(true);
         if (event.currentTarget.checkValidity() === false) {
             return false;
@@ -80,11 +84,6 @@ function App() {
                 'Content-Type': 'application/json'
             }
         });
-
-        // Show output column if hidden
-        const outputColumn = document.getElementById('output_column');
-        outputColumn.classList.remove('d-none');
-        outputColumn.classList.add('d-flex');
 
         // Write result string to state object (shows QR image)
         result = await result.text();
@@ -121,7 +120,7 @@ function App() {
             <Navbar fixed="top" variant="dark" className="bg-primary">
                 <Container fluid>
                     {/* Hidden button keeps title centered*/}
-                    <Button style={{visibility: "hidden"}}><i className="bi-list"></i></Button>
+                    <Button className="invisible"><i className="bi-list"></i></Button>
                     <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
@@ -165,13 +164,13 @@ function App() {
                         })()}
                     </Col>
 
-                    <Col id="output_column" md={6} className="d-none flex-column justify-content-center align-items-center py-3 h-100">
-                        {/* Keep QR vertically centered, hidden button negates download button impact on layout */}
-                        <Button variant="primary" as="a" className="mb-3" style={{visibility: "hidden"}}>Download</Button>
+                    <Col id="output_col" md={6} className="d-none flex-column justify-content-center py-3 h-100">
+                        {/* Vertically center QR code, hidden button negates download button impact on layout */}
+                        <Button variant="primary" as="a" className="mb-3 invisible">Download</Button>
 
                         {/* Output image + download button */}
-                        <img id="output" src={"data:image/png;base64," + qrString}></img>
-                        <Button id="download" variant="primary" as="a" className="mb-3" onClick={downloadQR}>
+                        <img src={"data:image/png;base64," + qrString}></img>
+                        <Button variant="primary" as="a" className="mb-3 mx-auto" onClick={downloadQR}>
                             Download
                         </Button>
                     </Col>
