@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import ContactForm from './ContactForm';
 import WifiForm from './WifiForm';
 import LinkForm from './LinkForm';
+import { List, PersonLinesFill, Wifi, Link45deg } from 'react-bootstrap-icons';
 
 function App() {
     // Default to contact QR code form
@@ -120,24 +121,22 @@ function App() {
             <Navbar fixed="top" variant="dark" className="bg-primary">
                 <Container fluid>
                     {/* Hidden button keeps title centered*/}
-                    <Button className="invisible"><i className="bi-list"></i></Button>
+                    <Button className="invisible"><List /></Button>
                     <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
                     <Dropdown align="end">
-                        <Dropdown.Toggle className="my-auto">
-                            <i className="bi-list"></i>
-                        </Dropdown.Toggle>
+                        <Dropdown.Toggle className="my-auto"><List /></Dropdown.Toggle>
 
                         <Dropdown.Menu>
                             <Dropdown.Item onClick={(() => {showForm('contact');})} active={qrType === "contact"}>
-                                <i className="bi bi-person-lines-fill me-3"></i>Contact
+                                <PersonLinesFill className="me-3" />Contact
                             </Dropdown.Item>
                             <Dropdown.Item onClick={(() => {showForm('wifi');})} active={qrType === "wifi"}>
-                                <i className="bi bi-wifi me-3"></i>Wifi
+                                <Wifi className="me-3" />Link
                             </Dropdown.Item>
                             <Dropdown.Item onClick={(() => {showForm('link');})} active={qrType === "link"}>
-                                <i className="bi bi-link-45deg me-3"></i>Link
+                                <Link45deg className="me-3" />Link
                             </Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
