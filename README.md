@@ -3,7 +3,7 @@
 
 # QR Code Generator
 
-A lightweight (137MB) webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
+A lightweight (141MB) webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
 
 Dynamically-sized text is baked into the output image for easy identification.
 
