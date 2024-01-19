@@ -1,5 +1,7 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
+import Button from 'react-bootstrap/Button';
+import { BrightnessHighFill, MoonFill } from 'react-bootstrap-icons';
 
 const ThemeContext = createContext();
 
@@ -37,4 +39,32 @@ export const ThemeProvider = ({ children }) => {
 
 ThemeProvider.propTypes = {
     children: PropTypes.node,
+};
+
+export const DarkModeButton = () => {
+    // Get theme state + hook to change
+    const { theme, setTheme } = useContext(ThemeContext);
+
+    switch(theme) {
+        case "light":
+            return (
+                <Button
+                    className="my-auto"
+                    title="Switch to dark mode"
+                    onClick={(() => {setTheme('dark');})}
+                >
+                    <MoonFill />
+                </Button>
+            );
+        case "dark":
+            return (
+                <Button
+                    className="my-auto"
+                    title="Switch to light mode"
+                    onClick={(() => {setTheme('light');})}
+                >
+                    <BrightnessHighFill />
+                </Button>
+            );
+    }
 };

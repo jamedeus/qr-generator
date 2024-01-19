@@ -8,6 +8,7 @@ import Container from 'react-bootstrap/Container';
 import ContactForm from './ContactForm';
 import WifiForm from './WifiForm';
 import LinkForm from './LinkForm';
+import { DarkModeButton } from './DarkMode';
 import { List, PersonLinesFill, Wifi, Link45deg } from 'react-bootstrap-icons';
 
 function App() {
@@ -120,8 +121,10 @@ function App() {
             {/* Fixed nav bar reserves space */}
             <Navbar fixed="top" variant="dark" className="bg-primary">
                 <Container fluid>
-                    {/* Hidden button keeps title centered*/}
-                    <Button className="invisible"><List /></Button>
+                    {/* Dark mode switch */}
+                    <DarkModeButton />
+
+                    {/* Header */}
                     <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
