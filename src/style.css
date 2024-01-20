@@ -48,3 +48,8 @@ border: 0px;
 .dropdown-toggle::after {
     display: none;
 }
+
+/* Rounded corners on output image */
+img {
+    border-radius: 2rem;
+}

@@ -53,7 +53,7 @@ export const DarkModeButton = () => {
                     title="Switch to dark mode"
                     onClick={(() => {setTheme('dark');})}
                 >
-                    <MoonFill />
+                    <MoonFill className="mb-1" />
                 </Button>
             );
         case "dark":
@@ -63,7 +63,7 @@ export const DarkModeButton = () => {
                     title="Switch to light mode"
                     onClick={(() => {setTheme('light');})}
                 >
-                    <BrightnessHighFill />
+                    <BrightnessHighFill className="mb-1" />
                 </Button>
             );
     }

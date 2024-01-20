@@ -129,7 +129,9 @@ function App() {
 
                     {/* Dropdown to select QR Code type */}
                     <Dropdown align="end">
-                        <Dropdown.Toggle className="my-auto"><List /></Dropdown.Toggle>
+                        <Dropdown.Toggle className="my-auto">
+                            <List className="mb-1" />
+                        </Dropdown.Toggle>
 
                         <Dropdown.Menu>
                             <Dropdown.Item onClick={(() => {showForm('contact');})} active={qrType === "contact"}>
@@ -168,11 +170,11 @@ function App() {
 
                     <Col id="output_col" md={6} className="d-none flex-column justify-content-center py-3 h-100">
                         {/* Vertically center QR code, hidden button negates download button impact on layout */}
-                        <Button variant="primary" as="a" className="mb-3 invisible">Download</Button>
+                        <Button variant="primary" as="a" className="my-3 invisible">Download</Button>
 
                         {/* Output image + download button */}
                         <img src={"data:image/png;base64," + qrString}></img>
-                        <Button variant="primary" as="a" className="mb-3 mx-auto" onClick={downloadQR}>
+                        <Button variant="primary" as="a" className="my-3 mx-auto" onClick={downloadQR}>
                             Download
                         </Button>
                     </Col>
