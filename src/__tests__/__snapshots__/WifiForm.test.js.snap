@@ -1,0 +1,49 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`WifiForm matches snapshot 1`] = `
+<form
+  className=""
+  noValidate={true}
+  onSubmit={[MockFunction]}
+>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="ssid"
+      placeholder="SSID"
+      required={true}
+      type="text"
+    />
+    <label>
+      SSID
+    </label>
+  </div>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="password"
+      placeholder="Password"
+      required={true}
+      type="password"
+    />
+    <label>
+      Password
+    </label>
+  </div>
+  <div
+    className="d-flex"
+  >
+    <button
+      className="mx-auto btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Generate
+    </button>
+  </div>
+</form>
+`;

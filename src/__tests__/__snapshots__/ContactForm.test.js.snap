@@ -1,0 +1,80 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ContactForm matches snapshot 1`] = `
+<form
+  className=""
+  noValidate={true}
+  onSubmit={[MockFunction]}
+>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="firstName"
+      placeholder="First Name"
+      required={true}
+      type="text"
+    />
+    <label>
+      First Name
+    </label>
+  </div>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="lastName"
+      placeholder="Last Name"
+      required={true}
+      type="text"
+    />
+    <label>
+      Last Name
+    </label>
+  </div>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="email"
+      onKeyDown={[Function]}
+      placeholder="Email"
+      required={true}
+      type="email"
+    />
+    <label>
+      Email
+    </label>
+  </div>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="phone"
+      onChange={[Function]}
+      pattern="^(\\d{10}|\\(\\d{3}\\) \\d{3}-\\d{4})$"
+      placeholder="Phone"
+      required={true}
+      type="tel"
+    />
+    <label>
+      Phone
+    </label>
+  </div>
+  <div
+    className="d-flex"
+  >
+    <button
+      className="mx-auto btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Generate
+    </button>
+  </div>
+</form>
+`;

@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LinkForm matches snapshot 1`] = `
+<form
+  className=""
+  noValidate={true}
+  onSubmit={[MockFunction]}
+>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="url"
+      placeholder="URL"
+      required={true}
+      type="text"
+    />
+    <label>
+      URL
+    </label>
+  </div>
+  <div
+    className="mb-3 form-floating"
+  >
+    <input
+      className="form-control"
+      name="text"
+      placeholder="Optional"
+      type="text"
+    />
+    <label>
+      Text
+    </label>
+  </div>
+  <div
+    className="d-flex"
+  >
+    <button
+      className="mx-auto btn btn-primary"
+      disabled={false}
+      type="submit"
+    >
+      Generate
+    </button>
+  </div>
+</form>
+`;
