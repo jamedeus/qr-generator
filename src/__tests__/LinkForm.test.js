@@ -58,17 +58,24 @@ describe('LinkForm', () => {
         const urlField = getByPlaceholderText('URL');
         const textField = getByPlaceholderText('Optional');
 
-        // Empty URL should be invalid, empty text should be valid
-        expect(urlField.validity.valueMissing).toBeTruthy();
+        // Empty text field should be valid (optional)
         expect(textField.validity.valid).toBeTruthy();
 
-        // Add arbitrary text, should fail pattern match
-//         urlField.value = "foobar";
-//         expect(urlField.validity.valid).toBeFalsy();
-//         expect(urlField.validity.patternMismatch).toBeTruthy();
+        // URL field with default text (https://) should fail pattern match
+        expect(urlField.validity.valid).toBeFalsy();
+        expect(urlField.validity.patternMismatch).toBeTruthy();
 
-        // Add correct URL format, should be valid
+        // Add arbitrary text, should fail pattern match
+        urlField.value = "https://foobar";
+        expect(urlField.validity.valid).toBeFalsy();
+        expect(urlField.validity.patternMismatch).toBeTruthy();
+
+        // Add valid URLs, should be valid with http, https, querystring, etc
         urlField.value = "https://foo.bar";
+        expect(urlField.validity.valid).toBeTruthy();
+        urlField.value = "http://foo.bar";
+        expect(urlField.validity.valid).toBeTruthy();
+        urlField.value = "https://foo.bar?param=value";
         expect(urlField.validity.valid).toBeTruthy();
     });
 });

@@ -11,7 +11,9 @@ exports[`LinkForm matches snapshot 1`] = `
   >
     <input
       className="form-control"
+      defaultValue="https://"
       name="url"
+      pattern="http(s?):\\/\\/([a-zA-Z0-9\\-_]+\\.)*[a-zA-Z0-9\\-_]+\\.[a-zA-Z]{2,}([\\/\\?].*)?"
       placeholder="URL"
       required={true}
       type="text"
