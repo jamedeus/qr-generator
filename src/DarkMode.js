@@ -3,26 +3,28 @@ import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { BrightnessHighFill, MoonFill } from 'react-bootstrap-icons';
 
-const ThemeContext = createContext();
+export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
     const [theme, setTheme] = useState('light');
 
     // Setup, runs once when mounted
     useEffect(() => {
-        // Check system theme once, override default (light) if user prefers dark
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            setTheme('dark');
-        }
-
-        // Listen for system theme changes, switch to dark/light mode responsively
-        window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
-            if (e.matches) { // Returns True for dark mode, False otherwise
+        if (window.matchMedia) {
+            // Set initial theme (override default light theme if user prefers dark)
+            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 setTheme('dark');
-            } else {
-                setTheme('light');
             }
-        });
+
+            // Listen for system theme changes, switch to dark/light mode responsively
+            window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
+                if (e.matches) { // Returns True for dark mode, False otherwise
+                    setTheme('dark');
+                } else {
+                    setTheme('light');
+                }
+            });
+        }
     }, []);
 
     // Change theme data attribute when state object changes
