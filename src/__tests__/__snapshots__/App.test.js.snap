@@ -1,0 +1,219 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App correctly handles downloadQR function 1`] = `
+[MockFunction] {
+  "calls": [
+    [
+      [
+        Uint8Array [
+          98,
+          97,
+          115,
+          101,
+          54,
+          52,
+          95,
+          115,
+          116,
+          114,
+          105,
+          110,
+          103,
+        ],
+      ],
+      {
+        "type": "image/png",
+      },
+    ],
+  ],
+  "results": [
+    {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`App matches snapshot 1`] = `
+<div
+  className="d-flex flex-column vh-100"
+>
+  <nav
+    className="bg-primary navbar navbar-expand navbar-dark fixed-top"
+  >
+    <div
+      className="container-fluid"
+    >
+      <button
+        className="my-auto btn btn-primary"
+        disabled={false}
+        onClick={[Function]}
+        title="Switch to dark mode"
+        type="button"
+      >
+        <svg
+          className="mb-1"
+          fill="currentColor"
+          height="1em"
+          viewBox="0 0 16 16"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M6 .278a.768.768 0 0 1 .08.858 7.208 7.208 0 0 0-.878 3.46c0 4.021 3.278 7.277 7.318 7.277.527 0 1.04-.055 1.533-.16a.787.787 0 0 1 .81.316.733.733 0 0 1-.031.893A8.349 8.349 0 0 1 8.344 16C3.734 16 0 12.286 0 7.71 0 4.266 2.114 1.312 5.124.06A.752.752 0 0 1 6 .278z"
+          />
+        </svg>
+      </button>
+      <span
+        className="mx-auto navbar-brand"
+      >
+        QR Code Generator
+      </span>
+      <div
+        className="dropdown"
+      >
+        <button
+          aria-expanded={false}
+          className="my-auto dropdown-toggle btn btn-primary"
+          disabled={false}
+          id="react-aria-:r0:"
+          onClick={[Function]}
+          type="button"
+        >
+          <svg
+            className="mb-1"
+            fill="currentColor"
+            height="1em"
+            viewBox="0 0 16 16"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"
+              fillRule="evenodd"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+  <div
+    className="d-flex flex-column h-100 container"
+  >
+    <div
+      className="h-100 row"
+    >
+      <div
+        className="d-flex flex-column justify-content-center py-3 h-100 col-md-6"
+      >
+        <form
+          className=""
+          noValidate={true}
+          onSubmit={[Function]}
+        >
+          <div
+            className="mb-3 form-floating"
+          >
+            <input
+              className="form-control"
+              name="firstName"
+              placeholder="First Name"
+              required={true}
+              type="text"
+            />
+            <label>
+              First Name
+            </label>
+          </div>
+          <div
+            className="mb-3 form-floating"
+          >
+            <input
+              className="form-control"
+              name="lastName"
+              placeholder="Last Name"
+              required={true}
+              type="text"
+            />
+            <label>
+              Last Name
+            </label>
+          </div>
+          <div
+            className="mb-3 form-floating"
+          >
+            <input
+              className="form-control"
+              name="email"
+              onKeyDown={[Function]}
+              placeholder="Email"
+              required={true}
+              type="email"
+            />
+            <label>
+              Email
+            </label>
+          </div>
+          <div
+            className="mb-3 form-floating"
+          >
+            <input
+              className="form-control"
+              name="phone"
+              onChange={[Function]}
+              pattern="^(\\d{10}|\\(\\d{3}\\) \\d{3}-\\d{4})$"
+              placeholder="Phone"
+              required={true}
+              type="tel"
+            />
+            <label>
+              Phone
+            </label>
+          </div>
+          <div
+            className="d-flex"
+          >
+            <button
+              className="mx-auto btn btn-primary"
+              disabled={false}
+              type="submit"
+            >
+              Generate
+            </button>
+          </div>
+        </form>
+      </div>
+      <div
+        className="d-none flex-column justify-content-center py-3 h-100 col-md-6"
+      >
+        <a
+          className="my-3 invisible btn btn-primary"
+          disabled={false}
+          href="#"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          D
+        </a>
+        <img
+          src="data:image/png;base64,"
+        />
+        <a
+          className="my-3 mx-auto btn btn-primary"
+          disabled={false}
+          href="#"
+          onClick={[Function]}
+          onKeyDown={[Function]}
+          role="button"
+          tabIndex={0}
+        >
+          Download
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+`;
