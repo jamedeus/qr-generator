@@ -1,5 +1,6 @@
 [![pipeline status](https://gitlab.com/jamedeus/qr-generator/badges/master/pipeline.svg)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
-[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
+[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_backend&key_text=Backend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
+[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_frontend&key_text=Frontend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
 
 # QR Code Generator
 

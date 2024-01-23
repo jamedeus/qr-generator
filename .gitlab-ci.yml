@@ -2,13 +2,14 @@ before_script:
   - docker info
 
 stages:
-  - test
+  - test_backend
+  - test_frontend
   - build
   - deploy
 
 # Run unit tests
-test:
-  stage: test
+test_backend:
+  stage: test_backend
   tags:
     - arm64
   script:
@@ -17,6 +18,17 @@ test:
     - coverage run --source='.' --omit='tests.py' -m unittest
     - coverage report -m --precision=1
   coverage: '/TOTAL.*\s+(\d+\.\d+\%)$/'
+  only:
+    - master
+
+test_frontend:
+  stage: test_frontend
+  tags:
+    - arm64
+  script:
+    - npm install
+    - npm test -- --coverage
+  coverage: '/All files.*\|.*\|.*\|.*\|.*\s+(\d+\.\d+)/'
   only:
     - master
 
