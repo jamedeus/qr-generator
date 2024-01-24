@@ -1,9 +1,10 @@
 [![pipeline status](https://gitlab.com/jamedeus/qr-generator/badges/master/pipeline.svg)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
-[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
+[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_backend&key_text=Backend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
+[![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_frontend&key_text=Frontend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
 
 # QR Code Generator
 
-A lightweight (137MB) webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
+A lightweight (141MB) webapp that generates QR codes for Contact Info, Wifi Credentials, and URLs.
 
 Dynamically-sized text is baked into the output image for easy identification.
 
@@ -56,18 +57,21 @@ git clone https://gitlab.com/jamedeus/qr-generator.git
 cd qr-generator
 ```
 
-2. Install dependencies:
+2. Install dependencies and build the frontend:
 ```
-pip install -r requirements.txt
+pip install -r backend/requirements.txt
 npm install
+npm run build
 ```
 
 3. Run:
 ```
-./app.py
+./backend/app.py
 ```
 
 The app can now be accessed at [http://localhost:5000](http://localhost:5000).
+
+To automatically rebuild the frontend when changes are made run `npm run build:dev`.
 
 To build the docker image run:
 ```
