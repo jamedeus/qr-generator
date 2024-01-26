@@ -109,6 +109,12 @@ class EndpointTests(TestCase):
 
 class ContactQrTests(TestCase):
 
+    def tearDown(self):
+        if os.path.exists('New_Name.png'):
+            os.remove('New_Name.png')
+        if os.path.exists('John-Doe_contact.png'):
+            os.remove('John-Doe_contact.png')
+
     def test_contact_qr(self):
         # Instantiate, confirm attributes
         qr = ContactQr("John", "Doe", "(212) 555-1234", "johnathan.doeth@hotmail.com")
@@ -131,14 +137,14 @@ class ContactQrTests(TestCase):
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 
-        # Save, confirm filename
+        # Confirm save method writes file to disk with correct filename
+        self.assertFalse(os.path.exists('John-Doe_contact.png'))
         qr.save()
         self.assertTrue(os.path.exists('John-Doe_contact.png'))
 
         # Save with non-default name, confirm created, clean up
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
-        os.remove('New_Name.png')
 
     # Test automatic attribute formatting
     def test_formatting(self):
@@ -159,6 +165,12 @@ class ContactQrTests(TestCase):
 
 class WifiQrTests(TestCase):
 
+    def tearDown(self):
+        if os.path.exists('New_Name.png'):
+            os.remove('New_Name.png')
+        if os.path.exists('mywifi_Wifi_QR.png'):
+            os.remove('mywifi_Wifi_QR.png')
+
     def test_wifi_qr(self):
         # Instantiate, confirm filename
         qr = WifiQr("mywifi", "hunter2")
@@ -177,14 +189,14 @@ class WifiQrTests(TestCase):
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 
-        # Save, confirm filename
+        # Confirm save method writes file to disk with correct filename
+        self.assertFalse(os.path.exists('mywifi_Wifi_QR.png'))
         qr.save()
         self.assertTrue(os.path.exists('mywifi_Wifi_QR.png'))
 
         # Save with non-default name, confirm created, clean up
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
-        os.remove('New_Name.png')
 
     def test_wifi_qr_long_password(self):
         # Instantiate, confirm filename
@@ -199,6 +211,12 @@ class WifiQrTests(TestCase):
 
 
 class LinkQrTests(TestCase):
+
+    def tearDown(self):
+        if os.path.exists('New_Name.png'):
+            os.remove('New_Name.png')
+        if os.path.exists('jamedeus.com_QR.png'):
+            os.remove('jamedeus.com_QR.png')
 
     def test_link_qr(self):
         # Instantiate, confirm filename
@@ -216,14 +234,14 @@ class LinkQrTests(TestCase):
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 
-        # Save, confirm filename
+        # Confirm save method writes file to disk with correct filename
+        self.assertFalse(os.path.exists('jamedeus.com_QR.png'))
         qr.save()
         self.assertTrue(os.path.exists('jamedeus.com_QR.png'))
 
         # Save with non-default name, confirm created, clean up
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
-        os.remove('New_Name.png')
 
     def test_link_http(self):
         # Instantiate, should remove http:// for filename
