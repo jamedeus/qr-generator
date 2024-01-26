@@ -11,16 +11,17 @@ from WifiQr import WifiQr
 from LinkQr import LinkQr
 
 
-
 app = Flask(
     __name__,
     static_folder='../dist',
     template_folder='../templates'
 )
 
+
 @app.get("/")
 def serve():
     return render_template('index.html')
+
 
 @app.post("/generate")
 def generate():
@@ -47,4 +48,4 @@ def generate():
 
 
 if __name__ == '__main__':
-    app.run(host= '0.0.0.0', port='8123', debug=True)
+    app.run(host='0.0.0.0', debug=True)

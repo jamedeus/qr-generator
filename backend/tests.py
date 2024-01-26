@@ -1,12 +1,11 @@
 import io
 import os
-import json
 import base64
 
 import PIL
 import pyqrcode
 from unittest import TestCase
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 from Qr import Qr
 from ContactQr import ContactQr
@@ -15,8 +14,8 @@ from LinkQr import LinkQr
 from app import app
 
 
-
 class EndpointTests(TestCase):
+
     def setUp(self):
         self.app = app.test_client()
 
@@ -31,7 +30,13 @@ class EndpointTests(TestCase):
 
     def test_generate_contact_qr(self):
         # Payload sent by frontend
-        payload = {'firstName': 'John', 'lastName': 'Doe','phone': '212-555-1234', 'email': 'john.doe@hotmail.com', 'type': 'contact-qr'}
+        payload = {
+            'firstName': 'John',
+            'lastName': 'Doe',
+            'phone': '212-555-1234',
+            'email': 'john.doe@hotmail.com',
+            'type': 'contact-qr'
+        }
 
         # Patch Qr methods to return dummy font and image
         with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \

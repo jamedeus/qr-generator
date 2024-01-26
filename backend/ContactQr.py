@@ -3,8 +3,17 @@ import pyqrcode
 from Qr import Qr
 
 
-
 class ContactQr(Qr):
+    """Subclass of Qr for generating contact info QR codes.
+
+    Generates a contact info QR code image containing first name, last name,
+    phone number, and email address. A text caption with the same details is
+    added below the QR code for easy identification.
+
+    The image with caption can be accessed at the qr_complete attribute.
+    The image with no caption can be accessed at the qr_image attribute.
+    """
+
     def __init__(self, first_name, last_name, phone, email):
         self.first_name = first_name.strip().capitalize()
         self.last_name = last_name.strip().capitalize()
@@ -23,7 +32,7 @@ class ContactQr(Qr):
 
         # Create contact info string, get font size (at least 6 points smaller than name)
         info = f"{self.email}\n{self.phone}"
-        info_font = self.get_font(info, self.sans_font, name_font.size-6)
+        info_font = self.get_font(info, self.sans_font, name_font.size - 6)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image

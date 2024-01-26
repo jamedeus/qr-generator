@@ -3,8 +3,17 @@ import pyqrcode
 from Qr import Qr
 
 
-
 class LinkQr(Qr):
+    """Subclass of Qr for generating link QR codes.
+
+    Generates a link QR code image containing any URL. A text caption with the
+    URL and optional text description is added below the QR code for easy
+    identification.
+
+    The image with caption can be accessed at the qr_complete attribute.
+    The image with no caption can be accessed at the qr_image attribute.
+    """
+
     def __init__(self, url, text=None):
         self.url = url.strip()
 

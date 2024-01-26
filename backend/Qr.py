@@ -3,9 +3,23 @@ import io
 from PIL import Image, ImageDraw, ImageFont
 
 
-
-# Base class for all QR generators
 class Qr():
+    """Base class for generating QR code images with text captions.
+
+    This class must be subclassed and cannot be used on its own. It provides
+    methods to convert a pyqrcode instance into a PNG with configurable width,
+    to add dynamically-sized text underneath the QR code, and to write the PNG
+    to disk.
+
+    The child class must contain a generate_qr_code method which returns a
+    pyqrcode instance with the appropriate data.
+
+    The child class must also contain a caption attribute containing a list of
+    dicts, one dict for each line of the caption. Each dict contains a text key
+    with the caption text and a font key with a PIL.ImageFont. Fonts can be
+    generated with the get_font method on this class.
+    """
+
     def __init__(self):
         # Font paths
         self.mono_font = "/usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf"
@@ -16,10 +30,6 @@ class Qr():
         # Generate QR code + PNG in memory buffer
         self.qr_raw = self.generate_qr_code()
         self.qr_image = self.generate_qr_image()
-
-    # Child classes must contain this method with appropriate data string
-    #def generate_qr_code(self):
-        #return pyqrcode.create(f'')
 
     # Returns PIL.Image containing QR code png
     def generate_qr_image(self, size=500):

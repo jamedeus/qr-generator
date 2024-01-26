@@ -3,8 +3,16 @@ import pyqrcode
 from Qr import Qr
 
 
-
 class WifiQr(Qr):
+    """Subclass of Qr for generating wifi network QR codes.
+
+    Generates a wifi QR code image containing SSID and password. A text caption
+    with the same details is added below the QR code for easy identification.
+
+    The image with caption can be accessed at the qr_complete attribute.
+    The image with no caption can be accessed at the qr_image attribute.
+    """
+
     def __init__(self, ssid, password):
         self.ssid = ssid.strip()
         self.password = password.strip()
@@ -21,7 +29,7 @@ class WifiQr(Qr):
         # PASS: loooooooooooong
         if len(self.ssid) > len(self.password):
             padding = len(self.ssid) - len(self.password)
-            padding_front = int(padding/2)
+            padding_front = int(padding / 2)
             padding -= padding_front
 
             ssid = f"SSID: {self.ssid}"
@@ -29,7 +37,7 @@ class WifiQr(Qr):
 
         else:
             padding = len(self.password) - len(self.ssid)
-            padding_front = int(padding/2)
+            padding_front = int(padding / 2)
             padding -= padding_front
 
             ssid = f"SSID: {' '*padding_front}{self.ssid}{' '*padding}"
