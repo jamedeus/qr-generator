@@ -143,7 +143,7 @@ function App() {
                                 <PersonLinesFill className="me-3" />Contact
                             </Dropdown.Item>
                             <Dropdown.Item onClick={(() => {showForm('wifi');})} active={qrType === "wifi"}>
-                                <Wifi className="me-3" />Link
+                                <Wifi className="me-3" />Wifi
                             </Dropdown.Item>
                             <Dropdown.Item onClick={(() => {showForm('link');})} active={qrType === "link"}>
                                 <Link45deg className="me-3" />Link
