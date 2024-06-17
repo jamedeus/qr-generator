@@ -14,8 +14,8 @@ test_backend:
     - export PATH=$PATH:/home/gitlab-runner/.local/bin
     - pipenv install --dev
   script:
-    - pipenv run coverage run --source='backend' --omit='backend/tests.py' -m unittest discover backend/
-    - pipenv run coverage report -m --precision=1
+    - pipenv run coverage run -m unittest discover backend/
+    - pipenv run coverage report
   coverage: '/TOTAL.*\s+(\d+\.\d+\%)$/'
   only:
     - master

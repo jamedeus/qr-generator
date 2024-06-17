@@ -1,0 +1,10 @@
+[run]
+branch = True
+source = backend
+omit =
+    backend/tests.py
+
+[report]
+precision = 2
+show_missing = True
+skip_empty = True

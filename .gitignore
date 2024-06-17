@@ -1,5 +1,5 @@
 .gitignore
-*.coverage*
+.coverage
 *.png
 coverage/
 dist/
