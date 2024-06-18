@@ -29,7 +29,7 @@ test_frontend:
   script:
     - npm install
     - npm test -- --coverage
-  coverage: '/All files.*\|.*\|.*\|.*\|.*\s+(\d+\.\d+)/'
+  coverage: '/All files[^\|]*\|[^\|]*\s+([\d\.]+)/'
   only:
     - master
 
