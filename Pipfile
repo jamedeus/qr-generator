@@ -13,6 +13,8 @@ werkzeug = "~=2.3"
 
 [dev-packages]
 coverage = "==7.2.3"
+pylint = "*"
+anybadge = "*"
 
 [requires]
 python_version = "3.10"

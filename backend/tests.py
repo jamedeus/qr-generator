@@ -1,16 +1,18 @@
+# pylint: disable=missing-docstring
+
 import io
 import os
 import base64
-
-import PIL
-import pyqrcode
 from unittest import TestCase
 from unittest.mock import patch
 
-from Qr import Qr
-from ContactQr import ContactQr
-from WifiQr import WifiQr
-from LinkQr import LinkQr
+import PIL
+import pyqrcode
+
+from qr import Qr
+from contact_qr import ContactQr
+from wifi_qr import WifiQr
+from link_qr import LinkQr
 from app import app
 
 
@@ -20,7 +22,10 @@ class EndpointTests(TestCase):
         self.app = app.test_client()
 
         # Dummy responses for mock methods
-        self.dummy_font = PIL.ImageFont.truetype("/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf", 42)
+        self.dummy_font = PIL.ImageFont.truetype(
+            "/usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf",
+            42
+        )
         self.dummy_image = PIL.Image.new('RGB', (100, 100), color='white')
 
     def test_index(self):
@@ -54,7 +59,11 @@ class EndpointTests(TestCase):
 
     def test_generate_wifi_qr(self):
         # Payload sent by frontend
-        payload = {'ssid': 'AzureDiamond', 'password': 'hunter2', 'type': 'wifi-qr'}
+        payload = {
+            'ssid': 'AzureDiamond',
+            'password': 'hunter2',
+            'type': 'wifi-qr'
+        }
 
         # Patch Qr methods to return dummy font and image
         with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
@@ -72,7 +81,11 @@ class EndpointTests(TestCase):
 
     def test_generate_link_qr(self):
         # Payload sent by frontend
-        payload = {'url': 'https://jamedeus.com', 'text': '', 'type': 'link-qr'}
+        payload = {
+            'url': 'https://jamedeus.com',
+            'text': '',
+            'type': 'link-qr'
+        }
 
         # Patch Qr methods to return dummy font and image
         with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
@@ -90,7 +103,11 @@ class EndpointTests(TestCase):
 
     def test_generate_link_with_text(self):
         # Payload sent by frontend
-        payload = {'url': 'https://jamedeus.com', 'text': 'Homepage', 'type': 'link-qr'}
+        payload = {
+            'url': 'https://jamedeus.com',
+            'text': 'Homepage',
+            'type': 'link-qr'
+        }
 
         # Patch Qr methods to return dummy font and image
         with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
@@ -106,6 +123,42 @@ class EndpointTests(TestCase):
             img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
             self.assertEqual(img.format, 'PNG')
 
+    def test_generate_invalid_qr_code_type(self):
+        # Payload with unsupported QR code type
+        payload = {
+            'lat': '-77.8473197',
+            'lon': '166.6752747',
+            'type': 'geo-qr'
+        }
+
+        # Patch Qr methods to return dummy font and image
+        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+
+            # Send post request, confirm expected error is returned
+            response = self.app.post('/generate', json=payload, content_type='application/json')
+            self.assertEqual(response.status_code, 400)
+            self.assertEqual(response.text, 'Unsupported QR code type')
+
+            # Confirm methods used to generate QR code were not called
+            self.assertEqual(mock_get_font.call_count, 0)
+            self.assertEqual(mock_add_text.call_count, 0)
+
+
+class QrBaseClassTests(TestCase):
+
+    def test_generate_qr_code_method(self):
+        # Should raise exception (method must be implemented by subclass)
+        qr = Qr()
+        with self.assertRaises(NotImplementedError):
+            qr.generate_qr_code()
+
+    def test_generate_caption_method(self):
+        # Should raise exception (method must be implemented by subclass)
+        qr = Qr()
+        with self.assertRaises(NotImplementedError):
+            qr.generate_caption()
+
 
 class ContactQrTests(TestCase):
 
@@ -114,6 +167,8 @@ class ContactQrTests(TestCase):
             os.remove('New_Name.png')
         if os.path.exists('John-Doe_contact.png'):
             os.remove('John-Doe_contact.png')
+        if os.path.exists('Missing_Extension.png'):
+            os.remove('Missing_Extension.png')
 
     def test_contact_qr(self):
         # Instantiate, confirm attributes
@@ -142,9 +197,13 @@ class ContactQrTests(TestCase):
         qr.save()
         self.assertTrue(os.path.exists('John-Doe_contact.png'))
 
-        # Save with non-default name, confirm created, clean up
+        # Save with non-default name, confirm created
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
+
+        # Save with missing extension, confirm added automatically
+        qr.save('Missing_Extension')
+        self.assertTrue(os.path.exists('Missing_Extension.png'))
 
     # Test automatic attribute formatting
     def test_formatting(self):
@@ -170,6 +229,8 @@ class WifiQrTests(TestCase):
             os.remove('New_Name.png')
         if os.path.exists('mywifi_Wifi_QR.png'):
             os.remove('mywifi_Wifi_QR.png')
+        if os.path.exists('Missing_Extension.png'):
+            os.remove('Missing_Extension.png')
 
     def test_wifi_qr(self):
         # Instantiate, confirm filename
@@ -194,9 +255,13 @@ class WifiQrTests(TestCase):
         qr.save()
         self.assertTrue(os.path.exists('mywifi_Wifi_QR.png'))
 
-        # Save with non-default name, confirm created, clean up
+        # Save with non-default name, confirm created
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
+
+        # Save with missing extension, confirm added automatically
+        qr.save('Missing_Extension')
+        self.assertTrue(os.path.exists('Missing_Extension.png'))
 
     def test_wifi_qr_long_password(self):
         # Instantiate, confirm filename
@@ -217,6 +282,8 @@ class LinkQrTests(TestCase):
             os.remove('New_Name.png')
         if os.path.exists('jamedeus.com_QR.png'):
             os.remove('jamedeus.com_QR.png')
+        if os.path.exists('Missing_Extension.png'):
+            os.remove('Missing_Extension.png')
 
     def test_link_qr(self):
         # Instantiate, confirm filename
@@ -239,9 +306,13 @@ class LinkQrTests(TestCase):
         qr.save()
         self.assertTrue(os.path.exists('jamedeus.com_QR.png'))
 
-        # Save with non-default name, confirm created, clean up
+        # Save with non-default name, confirm created
         qr.save('New_Name.png')
         self.assertTrue(os.path.exists('New_Name.png'))
+
+        # Save with missing extension, confirm added automatically
+        qr.save('Missing_Extension')
+        self.assertTrue(os.path.exists('Missing_Extension.png'))
 
     def test_link_http(self):
         # Instantiate, should remove http:// for filename

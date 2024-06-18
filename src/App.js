@@ -83,7 +83,7 @@ function App() {
         console.log(data);
 
         // Post form data, receive base64 PNG
-        var result = await fetch('/generate', {
+        const response = await fetch('/generate', {
             method: 'POST',
             body: JSON.stringify(data),
             headers: {
@@ -93,10 +93,15 @@ function App() {
         });
 
         // Write result string to state object (shows QR image)
-        result = await result.text();
-        setQrString(result);
-        setQrVisible(true);
-        console.log(result);
+        if (response.ok) {
+            const result = await response.text();
+            setQrString(result);
+            setQrVisible(true);
+            console.log(result);
+        } else {
+            const error = await response.text();
+            alert(error);
+        }
     }
 
     // Decodes base64 image string from event to binary, serves download
@@ -167,6 +172,7 @@ function App() {
                                     return <WifiForm generate={generate} validated={validated} />;
                                 case "link":
                                     return <LinkForm generate={generate} validated={validated} />;
+                                /* istanbul ignore next */
                                 default:
                                     return null;
                             }

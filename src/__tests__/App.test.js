@@ -1,4 +1,5 @@
 import renderer from 'react-test-renderer';
+import userEvent from "@testing-library/user-event";
 import { act } from 'react-dom/test-utils';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '../DarkMode.js';
@@ -16,6 +17,7 @@ describe('App', () => {
         // Mock fetch function
         global.fetch = jest.fn(() =>
             Promise.resolve({
+                ok: true,
                 text: () => Promise.resolve('mock_image_string')
             })
         );
@@ -107,9 +109,7 @@ describe('App', () => {
         getByPlaceholderText('Last Name').value = 'last';
         getByPlaceholderText('Email').value = 'first.last@mail.com';
         getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await act(() => {
-            fireEvent.click(submitButton);
-        });
+        await userEvent.click(submitButton);
 
         // Confirm correct data posted to /generate endpoint
         expect(global.fetch).toHaveBeenCalledWith('/generate', expect.objectContaining({
@@ -141,7 +141,7 @@ describe('App', () => {
         expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
 
         // Click generate button without filling in fields
-        await act(() => {
+        act(() => {
             fireEvent.click(submitButton);
         });
 
@@ -152,6 +152,29 @@ describe('App', () => {
         expect(form.classList).toContainEqual('was-validated');
         expect(outputCol.classList).toContainEqual('d-none');
         expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
+    });
+
+    it('shows an alert if an error is received from backend', async () => {
+        // Spy on window.alert, mock fetch function to return expected error
+        const alertSpy = jest.spyOn(window, 'alert');
+        global.fetch = jest.fn(() =>
+            Promise.resolve({
+                ok: false,
+                status: 400,
+                text: () => Promise.resolve('Unsupported QR code type')
+            })
+        );
+
+        // Populate all fields, click generate button
+        getByPlaceholderText('First Name').value = 'first';
+        getByPlaceholderText('Last Name').value = 'last';
+        getByPlaceholderText('Email').value = 'first.last@mail.com';
+        getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await userEvent.click(submitButton);
+
+        // Confirm window.alert was called, output column is NOT visible
+        expect(alertSpy).toHaveBeenCalled();
+        expect(outputCol.classList).toContainEqual('d-none');
     });
 
     it('correctly handles downloadQR function', async () => {
@@ -166,7 +189,7 @@ describe('App', () => {
         URL.createObjectURL = jest.fn(() => 'blob:url');
 
         // Click download button
-        await act(() => {
+        act(() => {
             fireEvent.click(downloadButton);
         });
 
@@ -187,9 +210,7 @@ describe('App', () => {
         getByPlaceholderText('Last Name').value = 'last';
         getByPlaceholderText('Email').value = 'first.last@mail.com';
         getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await act(() => {
-            fireEvent.click(submitButton);
-        });
+        await userEvent.click(submitButton);
 
         // Confirm output column is visible, img has expected source
         expect(form.classList).toContainEqual('was-validated');
@@ -202,7 +223,7 @@ describe('App', () => {
         });
 
         // Switch to wifi form
-        await act(() => {
+        act(() => {
             const WifiButton = nav.childNodes[2].childNodes[1].childNodes[1];
             fireEvent.click(WifiButton);
         });
