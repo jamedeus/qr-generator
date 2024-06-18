@@ -1,6 +1,8 @@
+'''Subclass of Qr for generating wifi network QR codes.'''
+
 import pyqrcode
 
-from Qr import Qr
+from qr import Qr
 
 
 class WifiQr(Qr):
@@ -14,6 +16,8 @@ class WifiQr(Qr):
     """
 
     def __init__(self, ssid, password):
+        super().__init__()
+
         self.ssid = ssid.strip()
         self.password = password.strip()
 
@@ -21,7 +25,14 @@ class WifiQr(Qr):
         self.filename = f"{self.ssid}_Wifi_QR"
 
         # Create QR code
-        super().__init__()
+        self.generate()
+
+    def generate_qr_code(self):
+        '''Returns pyqrcode instance with wifi credentials from class attributes.'''
+        return pyqrcode.create(f"WIFI:T:WPA;S:{self.ssid};P:{self.password};;")
+
+    def generate_caption(self):
+        '''Returns list of caption dicts used by Qr.add_text method.'''
 
         # Get font size for longest param, format so shorter is centered above/below
         # Ex:
@@ -43,18 +54,11 @@ class WifiQr(Qr):
             ssid = f"SSID: {' '*padding_front}{self.ssid}{' '*padding}"
             password = f"PASS: {self.password}"
 
-        font = self.get_font(ssid, self.mono_font, 64)
+        font = self.get_font(ssid, self.MONO_FONT, 64)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image
-        self.caption = [
+        return [
             {'text': ssid, 'font': font},
             {'text': password, 'font': font}
         ]
-
-        # Add caption to QR Image
-        self.qr_complete = self.add_text()
-
-    # Returns pyqrcode instance
-    def generate_qr_code(self):
-        return pyqrcode.create(f"WIFI:T:WPA;S:{self.ssid};P:{self.password};;")

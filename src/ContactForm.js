@@ -22,7 +22,7 @@ function ContactForm({ generate, validated }) {
             event.target.value = `(${areaCode}) ${middle}`;
         } else if (input.length > 0) {
             event.target.value = `(${areaCode}`;
-        } else if (input.length == 0) {
+        } else {
             event.target.value = ``;
         }
     }

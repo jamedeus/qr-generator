@@ -1,12 +1,12 @@
 stages:
-  - test_backend
-  - test_frontend
+  - test
+  - pylint
   - build
   - deploy
 
 # Run unit tests
 test_backend:
-  stage: test_backend
+  stage: test
   tags:
     - nas
     - shell
@@ -21,7 +21,7 @@ test_backend:
     - master
 
 test_frontend:
-  stage: test_frontend
+  stage: test
   image: node:20-bullseye
   tags:
     - nas
@@ -33,7 +33,29 @@ test_frontend:
   only:
     - master
 
-# Build local image + multiarch image for docker hub
+# Update pylint badge
+pylint:
+  stage: test
+  image: python:3.10-bullseye
+  tags:
+    - nas
+    - docker
+  before_script:
+    - pip3 install pipenv
+    - pipenv install --dev
+  script:
+    - mkdir ./pylint
+    - pipenv run pylint --output-format=text backend/ | tee ./pylint/pylint.log || pipenv run pylint-exit $?
+    - PYLINT_SCORE=$(sed -n 's/^Your code has been rated at \([-0-9.]*\)\/.*/\1/p' ./pylint/pylint.log)
+    - pipenv run anybadge --label=pylint --file=pylint/pylint.svg --value=$PYLINT_SCORE 3=red 5=orange 7=yellow 9=green
+    - echo "Pylint score is $PYLINT_SCORE"
+  artifacts:
+    paths:
+      - ./pylint/
+  only:
+    - master
+
+# Build local image
 build:
   stage: build
   tags:
@@ -43,19 +65,36 @@ build:
     - docker info
   script:
     # Increment most-recent version tag, build local image
-    - 'export IMAGE_NAME="jamedeus/qr-generator"'
-    - 'export LAST_TAG=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "^${IMAGE_NAME}:[0-9]*\.[0-9]*$" | sort --version-sort | tail -n 1 | cut -d\: -f 2)'
-    - "export NEW_TAG=$(echo $LAST_TAG | awk -F. '{$NF = $NF + 1;} 1' OFS=.)"
+    - 'IMAGE_NAME="jamedeus/qr-generator"'
+    - 'LAST_TAG=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "^${IMAGE_NAME}:[0-9]*\.[0-9]*$" | sort --version-sort | tail -n 1 | cut -d\: -f 2)'
+    - "NEW_TAG=$(echo $LAST_TAG | awk -F. '{$NF = $NF + 1;} 1' OFS=.)"
     - 'docker build --platform linux/amd64 -t $IMAGE_NAME:$NEW_TAG . -f Dockerfile'
-    # Build multiarch image, push to docker hub with both version and latest tags
-    - 'docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD'
-    - 'docker buildx create --name multiarch-builder'
-    - 'docker buildx use multiarch-builder'
-    - 'docker buildx build --platform linux/arm64,linux/amd64 -t $IMAGE_NAME:$NEW_TAG -t $IMAGE_NAME:latest --push .'
-    - 'docker buildx rm multiarch-builder'
-    - 'docker logout'
   only:
     - master
+
+# Build multiarch image tagged with contents of version file, push to docker hub
+# Only runs when version file changes
+dockerhub:
+  stage: build
+  tags:
+    - nas
+    - shell
+  before_script:
+    - docker info
+  script:
+    # Read new tag from version file
+    - 'VERSION=$(cat version)'
+    - 'IMAGE_NAME="jamedeus/qr-generator"'
+    - 'echo "$DOCKERHUB_PASSWORD" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin'
+    - 'docker buildx create --name multiarch-builder'
+    - 'docker buildx use multiarch-builder'
+    - 'docker buildx build --platform linux/arm64,linux/amd64 -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest --push .'
+    - 'docker buildx rm multiarch-builder'
+    - 'docker logout'
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "master"'
+      changes:
+        - version
 
 # Deploy most-recent image
 deploy:
@@ -66,8 +105,8 @@ deploy:
   before_script:
     - docker info
   script:
-    - 'export IMAGE_NAME="jamedeus/qr-generator"'
-    - 'export LAST_TAG=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "^${IMAGE_NAME}:[0-9]*\.[0-9]*$" | sort --version-sort | tail -n 1 | cut -d\: -f 2)'
+    - 'IMAGE_NAME="jamedeus/qr-generator"'
+    - 'LAST_TAG=$(docker images --format "{{.Repository}}:{{.Tag}}" | grep "^${IMAGE_NAME}:[0-9]*\.[0-9]*$" | sort --version-sort | tail -n 1 | cut -d\: -f 2)'
     - 'sed -i "s|$IMAGE_NAME:[0-9]*\.[0-9]*|$IMAGE_NAME:$LAST_TAG|g" /home/jamedeus/docker/docker-compose.yaml'
     - 'docker compose -f /home/jamedeus/docker/docker-compose.yaml up -d'
   only:

@@ -26,7 +26,7 @@ const mockMatchMedia = () => {
             addListener: jest.fn(listener => {
                 mockListener = listener;
             }),
-            removeListener: jest.fn(listener => {
+            removeListener: jest.fn(() => {
                 mockListener = jest.fn();
             }),
         };

@@ -1,6 +1,7 @@
 [![pipeline status](https://gitlab.com/jamedeus/qr-generator/badges/master/pipeline.svg)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
 [![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_backend&key_text=Backend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
 [![coverage report](https://gitlab.com/jamedeus/qr-generator/badges/master/coverage.svg?job=test_frontend&key_text=Frontend+Coverage&key_width=120)](https://gitlab.com/jamedeus/qr-generator/-/commits/master)
+[![pylint score](https://gitlab.com/jamedeus/qr-generator/-/jobs/artifacts/master/raw/pylint/pylint.svg?job=pylint)](https://gitlab.com/jamedeus/qr-generator/-/jobs/artifacts/master/raw/pylint/pylint.log?job=pylint)
 
 # QR Code Generator
 
@@ -79,3 +80,7 @@ To build the docker image run:
 cd qr-generator
 docker build -t qr-generator:1.0 . -f Dockerfile
 ```
+
+## Version history
+
+[Changelog](changelog.md)
