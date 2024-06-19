@@ -4,6 +4,19 @@
     <title>QR Code Generator</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        :root[data-bs-theme="light"] {
+            background: #ffffff;
+        }
+        :root[data-bs-theme="dark"] {
+            background: #212529;
+        }
+    </style>
+    <script>
+        // Set theme dataset attribute from localStorage (or default to light)
+        const initialTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-bs-theme', initialTheme);
+    </script>
 </head>
 <body>
     <div id="root"></div>

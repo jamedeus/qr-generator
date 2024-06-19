@@ -6,30 +6,15 @@ import { BrightnessHighFill, MoonFill } from 'react-bootstrap-icons';
 export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
-    const [theme, setTheme] = useState('light');
-
-    // Setup, runs once when mounted
-    useEffect(() => {
-        if (window.matchMedia) {
-            // Set initial theme (override default light theme if user prefers dark)
-            if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-                setTheme('dark');
-            }
-
-            // Listen for system theme changes, switch to dark/light mode responsively
-            window.matchMedia('(prefers-color-scheme: dark)').addListener((e) => {
-                if (e.matches) { // Returns True for dark mode, False otherwise
-                    setTheme('dark');
-                } else {
-                    setTheme('light');
-                }
-            });
-        }
-    }, []);
+    // Load theme from localStorage (or default to light)
+    const initialTheme = localStorage.getItem('theme') || 'light';
+    const [theme, setTheme] = useState(initialTheme);
 
     // Change theme data attribute when state object changes
+    // Write new theme to  localStorage for persistence
     useEffect(() => {
         document.documentElement.setAttribute('data-bs-theme', theme);
+        localStorage.setItem('theme', theme);
     }, [theme]);
 
     return (

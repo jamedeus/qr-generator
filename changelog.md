@@ -2,6 +2,11 @@
 
 ## v1
 
+### 1.1.0
+
+* Remember theme selection after reload
+* Fix flash when reloading in dark mode
+
 ### 1.0.0
 
 * Improve error handling, test coverage, linting

@@ -6,7 +6,6 @@ import './style.css';
 import { ThemeProvider } from './DarkMode.js';
 import App from './App';
 
-
 const container = document.getElementById('root');
 const root = createRoot(container);
 root.render(
