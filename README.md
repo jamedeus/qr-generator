@@ -14,10 +14,18 @@ Multi-arch image available on [Docker Hub](https://hub.docker.com/r/jamedeus/qr-
 ## Screenshots
 
 <p align="center">
-  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example1.png" width="30%" alt="Form Example">
-  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example2.png" width="30%" alt="Contact Info Example">
-  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/example3.png" width="30%" alt="Wifi Example">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/form-light.png" width="30%" alt="Form Example">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/contact-qr-light.png" width="30%" alt="Contact Info Example">
+  <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/wifi-qr-light.png" width="30%" alt="Wifi Example">
 </p>
+<details close>
+  <summary>Dark theme</summary>
+  <p align="center">
+    <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/form-dark.png" width="30%" alt="Form Example">
+    <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/contact-qr-dark.png" width="30%" alt="Contact Info Example">
+    <img src="https://gitlab.com/jamedeus/qr-generator/-/raw/master/img/wifi-qr-dark.png" width="30%" alt="Wifi Example">
+  </p>
+</details>
 
 ## Setup
 
