@@ -103,7 +103,7 @@ function App() {
     const FormDropdown = () => {
         return (
             <Dropdown align="end">
-                <Dropdown.Toggle className="my-auto">
+                <Dropdown.Toggle className="my-auto" data-testid="dropdown">
                     <List className="mb-1" />
                 </Dropdown.Toggle>
 

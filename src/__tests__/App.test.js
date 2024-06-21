@@ -1,107 +1,88 @@
-import renderer from 'react-test-renderer';
 import userEvent from "@testing-library/user-event";
-import { act } from 'react-dom/test-utils';
-import { render, fireEvent, waitFor } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import { ThemeProvider } from '../DarkMode.js';
 import App from '../App';
 
 describe('App', () => {
-    let app, nav, submitButton;
-    let getByPlaceholderText, queryByPlaceholderText, getByRole;
+    let app, user;
 
-    // Setup: render App component, save references to buttons etc
     beforeEach(() => {
+        // Mock fetch function
+        global.fetch = jest.fn(() => Promise.resolve({
+            ok: true,
+            text: () => Promise.resolve('mock_image_string')
+        }));
+
         // Mock window.scroll
         window.scroll = jest.fn();
 
-        // Mock fetch function
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: true,
-                text: () => Promise.resolve('mock_image_string')
-            })
-        );
-
-        // Render component
+        // Render component, create userEvent instance
+        user = userEvent.setup();
         app = render(
             <ThemeProvider>
                 <App />
             </ThemeProvider>
         );
-
-        // Export references to each component used by tests
-        nav = app.getByText(/QR Code Generator/).parentElement;
-        submitButton = app.getByText(/generate/i);
-
-        // Export query functions
-        getByRole = app.getByRole;
-        getByPlaceholderText = app.getByPlaceholderText;
-        queryByPlaceholderText = app.queryByPlaceholderText;
-    });
-
-    afterEach(() => {
-        jest.clearAllMocks();
     });
 
     it('matches snapshot', () => {
-        const component = renderer.create(
+        const component = render(
             <ThemeProvider>
                 <App />
             </ThemeProvider>
         );
-        let tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
 
     it('renders the correct form when dropdown buttons are clicked', async () => {
         // Confirm contact form is mounted by default, other forms are not
-        expect(queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
-        expect(queryByPlaceholderText('SSID')).toBeNull();
-        expect(queryByPlaceholderText('URL')).toBeNull();
+        expect(app.queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
+        expect(app.queryByPlaceholderText('SSID')).toBeNull();
+        expect(app.queryByPlaceholderText('URL')).toBeNull();
 
         // Click top-right menu button, click Wifi option
-        await userEvent.click(nav.childNodes[2].childNodes[0]);
-        await userEvent.click(app.getByText('Wifi'));
+        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByText('Wifi'));
 
         // Confirm Wifi form is mounted, other forms are not
-        expect(queryByPlaceholderText('First Name')).toBeNull();
-        expect(queryByPlaceholderText('SSID').nodeName).toBe('INPUT');
-        expect(queryByPlaceholderText('URL')).toBeNull();
-
-        // Click link button, should show link form + hide other forms
-        await userEvent.click(nav.childNodes[2].childNodes[0]);
-        await userEvent.click(app.getByText('Link'));
+        expect(app.queryByPlaceholderText('First Name')).toBeNull();
+        expect(app.queryByPlaceholderText('SSID').nodeName).toBe('INPUT');
+        expect(app.queryByPlaceholderText('URL')).toBeNull();
 
         // Click top-right menu button, click Link option
-        expect(queryByPlaceholderText('First Name')).toBeNull();
-        expect(queryByPlaceholderText('SSID')).toBeNull();
-        expect(queryByPlaceholderText('URL').nodeName).toBe('INPUT');
+        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByText('Link'));
+
+        // Confirm Link form is mounted, other forms are not
+        expect(app.queryByPlaceholderText('First Name')).toBeNull();
+        expect(app.queryByPlaceholderText('SSID')).toBeNull();
+        expect(app.queryByPlaceholderText('URL').nodeName).toBe('INPUT');
 
         // Click top-right menu button, click Contact option
-        await userEvent.click(nav.childNodes[2].childNodes[0]);
-        await userEvent.click(app.getByText('Contact'));
+        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByText('Contact'));
 
         // Confirm Contact form is mounted, other forms are not
-        expect(queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
-        expect(queryByPlaceholderText('SSID')).toBeNull();
-        expect(queryByPlaceholderText('URL')).toBeNull();
+        expect(app.queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
+        expect(app.queryByPlaceholderText('SSID')).toBeNull();
+        expect(app.queryByPlaceholderText('URL')).toBeNull();
 
     });
 
     it('sends correct request when valid form is submitted', async () => {
-        // Confirm form not validated, output column not rendered
-        expect(getByRole('form').classList).not.toContainEqual('was-validated');
+        // Confirm form not validated, output column not mounted
+        expect(app.getByRole('form').classList).not.toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
 
         // Populate all fields, click generate button
-        getByPlaceholderText('First Name').value = 'first';
-        getByPlaceholderText('Last Name').value = 'last';
-        getByPlaceholderText('Email').value = 'first.last@mail.com';
-        getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await userEvent.click(submitButton);
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
 
         // Confirm correct data posted to /generate endpoint
-        expect(global.fetch).toHaveBeenCalledWith('/generate', expect.objectContaining({
+        expect(global.fetch).toHaveBeenCalledWith('/generate', {
             method: 'POST',
             body: JSON.stringify({
                 "firstName": "first",
@@ -114,10 +95,10 @@ describe('App', () => {
                 'Accept': 'application/json, text/plain, */*',
                 'Content-Type': 'application/json'
             }
-        }));
+        });
 
-        // Confirm form is now validated, output column rendered, img has correct source
-        expect(getByRole('form').classList).toContainEqual('was-validated');
+        // Confirm form validated, output column mounted, img has correct source
+        expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mock_image_string'
@@ -126,40 +107,35 @@ describe('App', () => {
 
     it('does not make a request when form is invalid', async () => {
         // Confirm form not validated, output column not rendered
-        expect(getByRole('form').tagName).toBe('FORM');
-        expect(getByRole('form').classList).not.toContainEqual('was-validated');
+        expect(app.getByRole('form').classList).not.toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
 
         // Click generate button without filling in fields
-        act(() => {
-            fireEvent.click(submitButton);
-        });
+        await user.click(app.getByText('Generate'));
 
         // Confirm fetch was NOT called
         expect(global.fetch).not.toHaveBeenCalled();
 
-        // Confirm form is now validated, but output column still did not render
-        expect(getByRole('form').classList).toContainEqual('was-validated');
+        // Confirm form is now validated, but output column still not mounted
+        expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
     });
 
     it('shows an alert if an error is received from backend', async () => {
         // Spy on window.alert, mock fetch function to return expected error
         const alertSpy = jest.spyOn(window, 'alert');
-        global.fetch = jest.fn(() =>
-            Promise.resolve({
-                ok: false,
-                status: 400,
-                text: () => Promise.resolve('Unsupported QR code type')
-            })
-        );
+        global.fetch = jest.fn(() => Promise.resolve({
+            ok: false,
+            status: 400,
+            text: () => Promise.resolve('Unsupported QR code type')
+        }));
 
         // Populate all fields, click generate button
-        getByPlaceholderText('First Name').value = 'first';
-        getByPlaceholderText('Last Name').value = 'last';
-        getByPlaceholderText('Email').value = 'first.last@mail.com';
-        getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await userEvent.click(submitButton);
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
 
         // Confirm window.alert was called, output column did not render
         expect(alertSpy).toHaveBeenCalled();
@@ -178,17 +154,15 @@ describe('App', () => {
         URL.createObjectURL = jest.fn(() => 'blob:url');
 
         // Populate fields and click generate to render download button
-        getByPlaceholderText('First Name').value = 'first';
-        getByPlaceholderText('Last Name').value = 'last';
-        getByPlaceholderText('Email').value = 'first.last@mail.com';
-        getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await userEvent.click(submitButton);
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
 
         // Click download button
-        const downloadButton = app.getByText(/download/i);
-        act(() => {
-            fireEvent.click(downloadButton);
-        });
+        const downloadButton = app.getByText("Download");
+        await user.click(downloadButton);
 
         // Confirm Blob was created with correct data
         expect(blobMock).toMatchSnapshot();
@@ -203,29 +177,22 @@ describe('App', () => {
 
     it('unmounts QR code image when form type is changed', async () => {
         // Populate all fields, click generate button
-        getByPlaceholderText('First Name').value = 'first';
-        getByPlaceholderText('Last Name').value = 'last';
-        getByPlaceholderText('Email').value = 'first.last@mail.com';
-        getByPlaceholderText('Phone').value = '(123) 456-7890';
-        await userEvent.click(submitButton);
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
 
         // Confirm output column was rendered, img has expected source
-        expect(getByRole('form').classList).toContainEqual('was-validated');
+        expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mock_image_string'
         );
 
-        // Click top-right menu button (open dropdown, render options inside)
-        act(() => {
-            nav.childNodes[2].childNodes[0].click();
-        });
-
-        // Switch to wifi form
-        act(() => {
-            const WifiButton = nav.childNodes[2].childNodes[1].childNodes[1];
-            fireEvent.click(WifiButton);
-        });
+        // Click top-right menu button, click Wifi option
+        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByText('Wifi'));
 
         // Confirm fade-exit class is added to output column
         await waitFor(() => {
@@ -234,13 +201,12 @@ describe('App', () => {
             ).toContain('fade-exit');
         }, { timeout: 50});
 
-
         // Confirm output column is umounted after animation completes
         await waitFor(() => {
             expect(app.container.querySelector('img')).toBeNull();
         }, { timeout: 500 });
 
         // Confirm new form is not validated
-        expect(getByRole('form').classList).not.toContainEqual('was-validated');
+        expect(app.getByRole('form').classList).not.toContainEqual('was-validated');
     });
 });
