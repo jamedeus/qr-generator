@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
-import { act } from 'react-dom/test-utils';
-import {render, fireEvent} from '@testing-library/react';
+import { render } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { ThemeContext, ThemeProvider, DarkModeButton } from '../DarkMode.js';
 
 // Consumes theme state, renders current value in div
@@ -42,6 +42,7 @@ describe('DarkModeButton', () => {
     });
 
     it('toggles state object when clicked', async () => {
+        const user = userEvent.setup();
         // Render button and test component that exposes state value
         const { getByRole, getByTestId } = render(
             <ThemeProvider>
@@ -55,21 +56,18 @@ describe('DarkModeButton', () => {
         expect(getByTestId('theme').innerHTML).toBe('light');
 
         // Click button, confirm state and button title change
-        act(() => {
-            fireEvent.click(darkModeButton);
-        });
+        await user.click(darkModeButton);
         expect(darkModeButton.title).toBe('Switch to light mode');
         expect(getByTestId('theme').innerHTML).toBe('dark');
 
         // Click button again, confirm state and button title change back
-        act(() => {
-            fireEvent.click(darkModeButton);
-        });
+        await user.click(darkModeButton);
         expect(darkModeButton.title).toBe('Switch to dark mode');
         expect(getByTestId('theme').innerHTML).toBe('light');
     });
 
     it('saves theme to localStorage when clicked', async () => {
+        const user = userEvent.setup();
         const { getByRole } = render(
             <ThemeProvider>
                 <DarkModeButton />
@@ -81,15 +79,11 @@ describe('DarkModeButton', () => {
         expect(localStorage.getItem('theme')).toBe('light');
 
         // Click button, confirm localStorage theme changes to dark
-        act(() => {
-            fireEvent.click(darkModeButton);
-        });
+        await user.click(darkModeButton);
         expect(localStorage.getItem('theme')).toBe('dark');
 
         // Click button again, confirm localStorage theme changes to light
-        act(() => {
-            fireEvent.click(darkModeButton);
-        });
+        await user.click(darkModeButton);
         expect(localStorage.getItem('theme')).toBe('light');
     });
 });

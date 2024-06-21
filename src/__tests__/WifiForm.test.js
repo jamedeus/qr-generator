@@ -19,13 +19,13 @@ describe('WifiForm', () => {
         const passField = getByPlaceholderText('Password');
 
         // All empty fields should be invalid
-        expect(ssidField.validity.valueMissing).toBeTruthy();
-        expect(passField.validity.valueMissing).toBeTruthy();
+        expect(ssidField.validity.valid).toBe(false);
+        expect(passField.validity.valid).toBe(false);
 
         // Add arbitrary text, should be valid
         ssidField.value = "foobar";
-        expect(ssidField.validity.valid).toBeTruthy();
+        expect(ssidField.validity.valid).toBe(true);
         passField.value = "foobar";
-        expect(passField.validity.valid).toBeTruthy();
+        expect(passField.validity.valid).toBe(true);
     });
 });
