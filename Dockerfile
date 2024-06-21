@@ -1,7 +1,7 @@
 # syntax=docker/dockerfile:1
 
 # Node dependencies build stage
-FROM node:19-buster-slim as node_build
+FROM node:19-buster-slim AS node_build
 
 # Copy source files
 COPY src/ ./src/
@@ -14,7 +14,7 @@ RUN npm install
 RUN npm run build
 
 # Install Ubuntu fonts stage
-FROM ubuntu:jammy as font_stage
+FROM ubuntu:jammy AS font_stage
 RUN apt-get update && apt-get install -y fonts-ubuntu
 
 # Final build stage

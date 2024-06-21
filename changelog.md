@@ -2,6 +2,11 @@
 
 ## v1
 
+### 1.1.1
+
+* Bug fix: Prevent scrolling to empty area after changing form (mobile)
+* Misc code improvements
+
 ### 1.1.0
 
 * Remember theme selection after reload
