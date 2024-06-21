@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+import React, { createContext, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
 import { BrightnessHighFill, MoonFill } from 'react-bootstrap-icons';
@@ -10,15 +10,15 @@ export const ThemeProvider = ({ children }) => {
     const initialTheme = localStorage.getItem('theme') || 'light';
     const [theme, setTheme] = useState(initialTheme);
 
-    // Change theme data attribute when state object changes
-    // Write new theme to  localStorage for persistence
-    useEffect(() => {
-        document.documentElement.setAttribute('data-bs-theme', theme);
-        localStorage.setItem('theme', theme);
-    }, [theme]);
+    // Changes state and data attribute, writes to localStorage for persistence
+    const changeTheme = (newTheme) => {
+        document.documentElement.setAttribute('data-bs-theme', newTheme);
+        localStorage.setItem('theme', newTheme);
+        setTheme(newTheme);
+    };
 
     return (
-        <ThemeContext.Provider value={{ theme, setTheme }}>
+        <ThemeContext.Provider value={{ theme, changeTheme }}>
             {children}
         </ThemeContext.Provider>
     );
@@ -30,7 +30,7 @@ ThemeProvider.propTypes = {
 
 export const DarkModeButton = () => {
     // Get theme state + hook to change
-    const { theme, setTheme } = useContext(ThemeContext);
+    const { theme, changeTheme } = useContext(ThemeContext);
 
     switch(theme) {
         case "light":
@@ -38,7 +38,7 @@ export const DarkModeButton = () => {
                 <Button
                     className="my-auto"
                     title="Switch to dark mode"
-                    onClick={(() => {setTheme('dark');})}
+                    onClick={(() => {changeTheme('dark');})}
                 >
                     <MoonFill className="mb-1" />
                 </Button>
@@ -48,7 +48,7 @@ export const DarkModeButton = () => {
                 <Button
                     className="my-auto"
                     title="Switch to light mode"
-                    onClick={(() => {setTheme('light');})}
+                    onClick={(() => {changeTheme('light');})}
                 >
                     <BrightnessHighFill className="mb-1" />
                 </Button>

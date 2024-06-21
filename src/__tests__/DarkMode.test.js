@@ -75,8 +75,8 @@ describe('DarkModeButton', () => {
         );
         const darkModeButton = getByRole('button');
 
-        // Confirm localStorage theme defaults to light
-        expect(localStorage.getItem('theme')).toBe('light');
+        // Confirm localStorage theme is not set before user clicks button
+        expect(localStorage.getItem('theme')).toBeNull();
 
         // Click button, confirm localStorage theme changes to dark
         await user.click(darkModeButton);
