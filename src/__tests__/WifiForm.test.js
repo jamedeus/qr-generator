@@ -1,14 +1,12 @@
-import renderer from 'react-test-renderer';
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import WifiForm from '../WifiForm';
 
 describe('WifiForm', () => {
     it('matches snapshot', () => {
-        const component = renderer.create(
+        const component = render(
             <WifiForm />
         );
-        let tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
 
     it('requires all fields', async () => {

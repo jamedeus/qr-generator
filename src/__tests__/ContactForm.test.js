@@ -1,15 +1,13 @@
-import renderer from 'react-test-renderer';
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '../ContactForm';
 
 describe('ContactForm', () => {
     it('matches snapshot', () => {
-        const component = renderer.create(
+        const component = render(
             <ContactForm />
         );
-        let tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
 
     it('formats phone number correctly, blocks invalid characters', async () => {

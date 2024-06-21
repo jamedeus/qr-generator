@@ -1,14 +1,12 @@
-import renderer from 'react-test-renderer';
-import {render} from '@testing-library/react';
+import { render } from '@testing-library/react';
 import LinkForm from '../LinkForm';
 
 describe('LinkForm', () => {
     it('matches snapshot', () => {
-        const component = renderer.create(
+        const component = render(
             <LinkForm />
         );
-        let tree = component.toJSON();
-        expect(tree).toMatchSnapshot();
+        expect(component).toMatchSnapshot();
     });
 
     it('requires URL field, but not text field', async () => {
