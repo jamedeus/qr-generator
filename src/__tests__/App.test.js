@@ -13,8 +13,11 @@ describe('App', () => {
             text: () => Promise.resolve('mock_image_string')
         }));
 
-        // Mock window.scroll
+        // Mock window.scroll, mock window height to 500px
         window.scroll = jest.fn();
+        jest
+            .spyOn(document.body, 'scrollHeight', 'get')
+            .mockImplementation(() => 500);
 
         // Render component, create userEvent instance
         user = userEvent.setup();
@@ -23,6 +26,8 @@ describe('App', () => {
                 <App />
             </ThemeProvider>
         );
+
+        jest.clearAllMocks();
     });
 
     it('matches snapshot', () => {
@@ -103,6 +108,11 @@ describe('App', () => {
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mock_image_string'
         );
+
+        // Confirm scrolled down to output column
+        expect(window.scroll).toHaveBeenCalledWith(
+            { top: 500, behavior: 'smooth' }
+        );
     });
 
     it('does not make a request when form is invalid', async () => {
@@ -119,6 +129,8 @@ describe('App', () => {
         // Confirm form is now validated, but output column still not mounted
         expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
+        // Confirm did not scroll to output column
+        expect(window.scroll).not.toHaveBeenCalled();
     });
 
     it('shows an alert if an error is received from backend', async () => {
@@ -140,6 +152,8 @@ describe('App', () => {
         // Confirm window.alert was called, output column did not render
         expect(alertSpy).toHaveBeenCalled();
         expect(app.container.querySelector('img')).toBeNull();
+        // Confirm did not scroll to output column
+        expect(window.scroll).not.toHaveBeenCalled();
     });
 
     it('correctly handles downloadQR function', async () => {
@@ -190,6 +204,11 @@ describe('App', () => {
             'data:image/png;base64,mock_image_string'
         );
 
+        // Confirm scrolled down to output column
+        expect(window.scroll).toHaveBeenCalledWith(
+            { top: 500, behavior: 'smooth' }
+        );
+
         // Click top-right menu button, click Wifi option
         await user.click(app.getByTestId('dropdown'));
         await user.click(app.getByText('Wifi'));
@@ -208,5 +227,9 @@ describe('App', () => {
 
         // Confirm new form is not validated
         expect(app.getByRole('form').classList).not.toContainEqual('was-validated');
+        // Confirm scrolled back to top of page
+        expect(window.scroll).toHaveBeenCalledWith(
+            { top: 0, behavior: 'smooth' }
+        );
     });
 });

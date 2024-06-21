@@ -63,8 +63,8 @@ function App() {
             }
         });
 
-        // Write result string to state object (shows QR image)
         if (response.ok) {
+            // Write result string to state object, show QR code
             const result = await response.text();
             setQrString(result);
             setQrVisible(true);
