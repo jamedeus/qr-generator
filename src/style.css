@@ -26,7 +26,7 @@ border: 0px;
     }
 }
 
-.fade-out {
+.fade-exit {
     animation: fade-out 0.25s ease-out forwards;
 }
 
@@ -40,7 +40,7 @@ border: 0px;
     }
 }
 
-.fade-in {
+.fade-enter {
     animation: fade-in 0.25s ease forwards;
 }
 

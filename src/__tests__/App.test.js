@@ -6,7 +6,7 @@ import { ThemeProvider } from '../DarkMode.js';
 import App from '../App';
 
 describe('App', () => {
-    let nav, form, submitButton, downloadButton, outputCol;
+    let app, nav, form, submitButton;
     let getByText, getByPlaceholderText, queryByPlaceholderText;
 
     // Setup: render App component, save references to buttons etc
@@ -23,23 +23,21 @@ describe('App', () => {
         );
 
         // Render component
-        const utils = render(
+        app = render(
             <ThemeProvider>
                 <App />
             </ThemeProvider>
         );
 
         // Export references to each component used by tests
-        nav = utils.getByText(/QR Code Generator/).parentElement;
-        submitButton = utils.getByText(/generate/i);
-        downloadButton = utils.getByText(/download/i);
+        nav = app.getByText(/QR Code Generator/).parentElement;
+        submitButton = app.getByText(/generate/i);
         form = submitButton.parentElement.parentElement;
-        outputCol = form.parentElement.parentElement.childNodes[1];
 
         // Export query functions
-        getByText = utils.getByText;
-        getByPlaceholderText = utils.getByPlaceholderText;
-        queryByPlaceholderText = utils.queryByPlaceholderText;
+        getByText = app.getByText;
+        getByPlaceholderText = app.getByPlaceholderText;
+        queryByPlaceholderText = app.queryByPlaceholderText;
     });
 
     afterEach(() => {
@@ -99,10 +97,9 @@ describe('App', () => {
     });
 
     it('sends correct request when valid form is submitted', async () => {
-        // Confirm form not validated, output not visible, output img has default source
+        // Confirm form not validated, output column not rendered
         expect(form.classList).not.toContainEqual('was-validated');
-        expect(outputCol.classList).toContainEqual('d-none');
-        expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
+        expect(app.container.querySelector('img')).toBeNull();
 
         // Populate all fields, click generate button
         getByPlaceholderText('First Name').value = 'first';
@@ -127,18 +124,19 @@ describe('App', () => {
             }
         }));
 
-        // Confirm form is now validated, output column is visible, img has correct source
+        // Confirm form is now validated, output column rendered, img has correct source
         expect(form.classList).toContainEqual('was-validated');
-        expect(outputCol.classList).not.toContainEqual('d-none');
-        expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,mock_image_string');
+        expect(app.container.querySelector('img')).not.toBeNull();
+        expect(app.container.querySelector('img').src).toBe(
+            'data:image/png;base64,mock_image_string'
+        );
     });
 
     it('does not make a request when form is invalid', async () => {
-        // Confirm form not validated, output not visible, output img has default source
+        // Confirm form not validated, output column not rendered
         expect(form.tagName).toBe('FORM');
         expect(form.classList).not.toContainEqual('was-validated');
-        expect(outputCol.classList).toContainEqual('d-none');
-        expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
+        expect(app.container.querySelector('img')).toBeNull();
 
         // Click generate button without filling in fields
         act(() => {
@@ -148,10 +146,9 @@ describe('App', () => {
         // Confirm fetch was NOT called
         expect(global.fetch).not.toHaveBeenCalled();
 
-        // Confirm form is now validated, but output is not visible and img still default
+        // Confirm form is now validated, but output column still did not render
         expect(form.classList).toContainEqual('was-validated');
-        expect(outputCol.classList).toContainEqual('d-none');
-        expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
+        expect(app.container.querySelector('img')).toBeNull();
     });
 
     it('shows an alert if an error is received from backend', async () => {
@@ -172,9 +169,9 @@ describe('App', () => {
         getByPlaceholderText('Phone').value = '(123) 456-7890';
         await userEvent.click(submitButton);
 
-        // Confirm window.alert was called, output column is NOT visible
+        // Confirm window.alert was called, output column did not render
         expect(alertSpy).toHaveBeenCalled();
-        expect(outputCol.classList).toContainEqual('d-none');
+        expect(app.container.querySelector('img')).toBeNull();
     });
 
     it('correctly handles downloadQR function', async () => {
@@ -188,7 +185,15 @@ describe('App', () => {
         // Mock createObjectURL to return a known value
         URL.createObjectURL = jest.fn(() => 'blob:url');
 
+        // Populate fields and click generate to render download button
+        getByPlaceholderText('First Name').value = 'first';
+        getByPlaceholderText('Last Name').value = 'last';
+        getByPlaceholderText('Email').value = 'first.last@mail.com';
+        getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await userEvent.click(submitButton);
+
         // Click download button
+        const downloadButton = app.getByText(/download/i);
         act(() => {
             fireEvent.click(downloadButton);
         });
@@ -204,7 +209,7 @@ describe('App', () => {
         expect(downloadButton.download).toBe('contact-qr.png');
     });
 
-    it('hides QR code when form type is changed', async () => {
+    it('unmounts QR code image when form type is changed', async () => {
         // Populate all fields, click generate button
         getByPlaceholderText('First Name').value = 'first';
         getByPlaceholderText('Last Name').value = 'last';
@@ -212,10 +217,12 @@ describe('App', () => {
         getByPlaceholderText('Phone').value = '(123) 456-7890';
         await userEvent.click(submitButton);
 
-        // Confirm output column is visible, img has expected source
+        // Confirm output column was rendered, img has expected source
         expect(form.classList).toContainEqual('was-validated');
-        expect(outputCol.classList).not.toContainEqual('d-none');
-        expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,mock_image_string');
+        expect(app.container.querySelector('img')).not.toBeNull();
+        expect(app.container.querySelector('img').src).toBe(
+            'data:image/png;base64,mock_image_string'
+        );
 
         // Click top-right menu button (open dropdown, render options inside)
         act(() => {
@@ -228,16 +235,21 @@ describe('App', () => {
             fireEvent.click(WifiButton);
         });
 
-        // Wait for animation (state doesn't update until complete)
+        // Confirm fade-exit class is added to output column
         await waitFor(() => {
-            // Get new references (old were replaced by re-render)
-            const form = getByText(/generate/i).parentElement.parentElement;
-            const outputCol = form.parentElement.parentElement.childNodes[1];
+            expect(
+                app.container.querySelector('img').parentElement.classList
+            ).toContain('fade-exit');
+        }, { timeout: 50});
 
-            // Confirm output column hidden, img source reset
-            expect(form.classList).not.toContainEqual('was-validated');
-            expect(outputCol.classList).toContainEqual('fade-out');
-            expect(outputCol.childNodes[1].src).toBe('data:image/png;base64,');
+
+        // Confirm output column is umounted after animation completes
+        await waitFor(() => {
+            expect(app.container.querySelector('img')).toBeNull();
         }, { timeout: 500 });
+
+        // Confirm new form is not validated
+        const newForm = getByText(/generate/i).parentElement.parentElement;
+        expect(newForm.classList).not.toContainEqual('was-validated');
     });
 });

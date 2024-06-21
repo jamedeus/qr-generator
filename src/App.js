@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
+import { CSSTransition } from "react-transition-group";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Button from 'react-bootstrap/Button';
@@ -24,9 +25,6 @@ function App() {
     // Create form validation state object
     const [validated, setValidated] = useState(false);
 
-    // Create ref for output column (contains QR code)
-    const outputColRef = useRef(null);
-
     // Takes type string (contact, wifi, or link)
     // Shows chosen form, resets validation, and hides old QR code (if present)
     const showForm = (type) => {
@@ -43,27 +41,10 @@ function App() {
         }, 468);
     };
 
-    // Add fade in/out classes when QR code visibility changes
     // Mobile: Scroll to bottom when QR shown, scroll to top when hidden
     useEffect(() => {
-        const outputColumn = outputColRef.current;
-        if (outputColumn) {
-            if (qrVisible) {
-                // Show output column if hidden
-                outputColumn.classList.remove('d-none');
-                outputColumn.classList.add('d-flex');
-                // Start fade in effect, scroll to bottom
-                outputColumn.classList.remove('fade-out');
-                outputColumn.classList.add('fade-in');
-                window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
-
-            } else {
-                // Start fade out effect, scroll to top
-                outputColumn.classList.remove('fade-in');
-                outputColumn.classList.add('fade-out');
-                window.scroll({ top: 0, behavior: 'smooth' });
-            }
-        }
+        const top = qrVisible ? document.body.scrollHeight : 0;
+        window.scroll({ top: top, behavior: 'smooth' });
     });
 
     // Called by generate buttons, takes submit event as arg
@@ -126,6 +107,21 @@ function App() {
         event.target.download = `${qrType}-qr.png`;
     }
 
+    const OutputColumn = () => {
+        return (
+            <Col md={6} className='d-flex flex-column justify-content-center py-3 h-100'>
+                {/* Vertically center QR code, hidden button offsets download button */}
+                <Button variant="primary" as="a" className="my-3 invisible">D</Button>
+
+                {/* Output image + download button */}
+                <img src={"data:image/png;base64," + qrString}></img>
+                <Button variant="primary" as="a" className="my-3 mx-auto" onClick={downloadQR}>
+                    Download
+                </Button>
+            </Col>
+        );
+    };
+
     return (
         <div className="d-flex flex-column vh-100">
             {/* Fixed nav bar reserves space */}
@@ -178,17 +174,9 @@ function App() {
                             }
                         })()}
                     </Col>
-
-                    <Col ref={outputColRef} md={6} className="d-none flex-column justify-content-center py-3 h-100">
-                        {/* Vertically center QR code, hidden button negates download button impact on layout */}
-                        <Button variant="primary" as="a" className="my-3 invisible">D</Button>
-
-                        {/* Output image + download button */}
-                        <img src={"data:image/png;base64," + qrString}></img>
-                        <Button variant="primary" as="a" className="my-3 mx-auto" onClick={downloadQR}>
-                            Download
-                        </Button>
-                    </Col>
+                    <CSSTransition in={qrVisible} timeout={250} classNames='fade' unmountOnExit={true}>
+                        <OutputColumn />
+                    </CSSTransition>
                 </Row>
             </Container>
         </div>

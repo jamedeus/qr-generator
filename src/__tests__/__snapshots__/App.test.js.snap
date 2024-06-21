@@ -184,35 +184,6 @@ exports[`App matches snapshot 1`] = `
           </div>
         </form>
       </div>
-      <div
-        className="d-none flex-column justify-content-center py-3 h-100 col-md-6"
-      >
-        <a
-          className="my-3 invisible btn btn-primary"
-          disabled={false}
-          href="#"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          D
-        </a>
-        <img
-          src="data:image/png;base64,"
-        />
-        <a
-          className="my-3 mx-auto btn btn-primary"
-          disabled={false}
-          href="#"
-          onClick={[Function]}
-          onKeyDown={[Function]}
-          role="button"
-          tabIndex={0}
-        >
-          Download
-        </a>
-      </div>
     </div>
   </div>
 </div>

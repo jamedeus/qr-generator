@@ -16,6 +16,7 @@
     "react-bootstrap": "^2.9.2",
     "react-bootstrap-icons": "^1.10.3",
     "react-dom": "^18.2.0",
+    "react-transition-group": "^4.4.5",
     "smoothscroll-polyfill": "^0.4.4"
   },
   "devDependencies": {
