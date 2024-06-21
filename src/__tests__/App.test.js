@@ -54,42 +54,35 @@ describe('App', () => {
         expect(tree).toMatchSnapshot();
     });
 
-    it('renders the correct form when dropdown buttons are clicked', () => {
-        // Click top-right menu button (open dropdown, render options inside)
-        act(() => {
-            nav.childNodes[2].childNodes[0].click();
-        });
-
-        // Get reference to each button that just rendered
-        const ContactButton = nav.childNodes[2].childNodes[1].childNodes[0];
-        const WifiButton = nav.childNodes[2].childNodes[1].childNodes[1];
-        const LinkButton = nav.childNodes[2].childNodes[1].childNodes[2];
-
-        // Should show contact by default
+    it('renders the correct form when dropdown buttons are clicked', async () => {
+        // Confirm contact form is mounted by default, other forms are not
         expect(queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
         expect(queryByPlaceholderText('SSID')).toBeNull();
         expect(queryByPlaceholderText('URL')).toBeNull();
 
-        // Click wifi button, should show wifi form + hide other forms
-        act(() => {
-            fireEvent.click(WifiButton);
-        });
+        // Click top-right menu button, click Wifi option
+        await userEvent.click(nav.childNodes[2].childNodes[0]);
+        await userEvent.click(app.getByText('Wifi'));
+
+        // Confirm Wifi form is mounted, other forms are not
         expect(queryByPlaceholderText('First Name')).toBeNull();
         expect(queryByPlaceholderText('SSID').nodeName).toBe('INPUT');
         expect(queryByPlaceholderText('URL')).toBeNull();
 
         // Click link button, should show link form + hide other forms
-        act(() => {
-            fireEvent.click(LinkButton);
-        });
+        await userEvent.click(nav.childNodes[2].childNodes[0]);
+        await userEvent.click(app.getByText('Link'));
+
+        // Click top-right menu button, click Link option
         expect(queryByPlaceholderText('First Name')).toBeNull();
         expect(queryByPlaceholderText('SSID')).toBeNull();
         expect(queryByPlaceholderText('URL').nodeName).toBe('INPUT');
 
-        // Click contact button, should show contact form + hide other forms
-        act(() => {
-            fireEvent.click(ContactButton);
-        });
+        // Click top-right menu button, click Contact option
+        await userEvent.click(nav.childNodes[2].childNodes[0]);
+        await userEvent.click(app.getByText('Contact'));
+
+        // Confirm Contact form is mounted, other forms are not
         expect(queryByPlaceholderText('First Name').nodeName).toBe('INPUT');
         expect(queryByPlaceholderText('SSID')).toBeNull();
         expect(queryByPlaceholderText('URL')).toBeNull();

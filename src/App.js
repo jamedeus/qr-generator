@@ -98,15 +98,53 @@ function App() {
         event.target.download = `${qrType}-qr.png`;
     }
 
+    // Navbar dropdown used to select QR code type
+    const FormDropdown = () => {
+        return (
+            <Dropdown align="end">
+                <Dropdown.Toggle className="my-auto">
+                    <List className="mb-1" />
+                </Dropdown.Toggle>
+
+                <Dropdown.Menu>
+                    <Dropdown.Item
+                        onClick={(() => {showForm('contact');})}
+                        active={qrType === "contact"}
+                    >
+                        <PersonLinesFill className="me-3" />Contact
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={(() => {showForm('wifi');})}
+                        active={qrType === "wifi"}
+                    >
+                        <Wifi className="me-3" />Wifi
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                        onClick={(() => {showForm('link');})}
+                        active={qrType === "link"}
+                    >
+                        <Link45deg className="me-3" />Link
+                    </Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        );
+    };
+
+    // Right column (bottom on mobile) with QR code image and download button
     const OutputColumn = () => {
         return (
             <Col md={6} className='d-flex flex-column justify-content-center py-3 h-100'>
-                {/* Vertically center QR code, hidden button offsets download button */}
-                <Button variant="primary" as="a" className="my-3 invisible">D</Button>
+                {/* Hidden button to vertically center QR code */}
+                <Button as="a" className="my-3 invisible">D</Button>
 
                 {/* Output image + download button */}
-                <img src={"data:image/png;base64," + qrString}></img>
-                <Button variant="primary" as="a" className="my-3 mx-auto" onClick={downloadQR}>
+                <img src={"data:image/png;base64," + qrString} />
+                <Button
+                    variant="primary"
+                    as="a"
+                    className="my-3 mx-auto"
+                    onClick={downloadQR}
+                >
                     Download
                 </Button>
             </Col>
@@ -122,26 +160,12 @@ function App() {
                     <DarkModeButton />
 
                     {/* Header */}
-                    <Navbar.Brand className="mx-auto">QR Code Generator</Navbar.Brand>
+                    <Navbar.Brand className="mx-auto">
+                        QR Code Generator
+                    </Navbar.Brand>
 
                     {/* Dropdown to select QR Code type */}
-                    <Dropdown align="end">
-                        <Dropdown.Toggle className="my-auto">
-                            <List className="mb-1" />
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <Dropdown.Item onClick={(() => {showForm('contact');})} active={qrType === "contact"}>
-                                <PersonLinesFill className="me-3" />Contact
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={(() => {showForm('wifi');})} active={qrType === "wifi"}>
-                                <Wifi className="me-3" />Wifi
-                            </Dropdown.Item>
-                            <Dropdown.Item onClick={(() => {showForm('link');})} active={qrType === "link"}>
-                                <Link45deg className="me-3" />Link
-                            </Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
+                    <FormDropdown />
                 </Container>
             </Navbar>
 
@@ -165,7 +189,12 @@ function App() {
                             }
                         })()}
                     </Col>
-                    <CSSTransition in={qrVisible} timeout={250} classNames='fade' unmountOnExit={true}>
+                    <CSSTransition
+                        in={qrVisible}
+                        timeout={250}
+                        classNames='fade'
+                        unmountOnExit={true}
+                    >
                         <OutputColumn />
                     </CSSTransition>
                 </Row>
