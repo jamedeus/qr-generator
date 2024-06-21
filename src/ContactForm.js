@@ -1,10 +1,8 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Form from 'react-bootstrap/Form';
 import FloatingLabel from 'react-bootstrap/FloatingLabel';
-import Button from 'react-bootstrap/Button';
 
-function ContactForm({ generate, validated }) {
+function ContactForm() {
     // Format phone number as user types
     function formatPhone(event) {
         // Remove all non-numeric characters, 10 digits max
@@ -35,7 +33,7 @@ function ContactForm({ generate, validated }) {
     }
 
     return (
-        <Form noValidate validated={validated} onSubmit={generate}>
+        <>
             <FloatingLabel label="First Name" className="mb-3">
                 <Form.Control
                     type="text"
@@ -74,19 +72,8 @@ function ContactForm({ generate, validated }) {
                     required
                 />
             </FloatingLabel>
-
-            <div className="d-flex">
-                <Button variant="primary" type="submit" className="mx-auto">
-                    Generate
-                </Button>
-            </div>
-        </Form>
+        </>
     );
 }
-
-ContactForm.propTypes = {
-    generate: PropTypes.func,
-    validated: PropTypes.bool
-};
 
 export default ContactForm;

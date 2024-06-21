@@ -6,8 +6,8 @@ import { ThemeProvider } from '../DarkMode.js';
 import App from '../App';
 
 describe('App', () => {
-    let app, nav, form, submitButton;
-    let getByText, getByPlaceholderText, queryByPlaceholderText;
+    let app, nav, submitButton;
+    let getByPlaceholderText, queryByPlaceholderText, getByRole;
 
     // Setup: render App component, save references to buttons etc
     beforeEach(() => {
@@ -32,10 +32,9 @@ describe('App', () => {
         // Export references to each component used by tests
         nav = app.getByText(/QR Code Generator/).parentElement;
         submitButton = app.getByText(/generate/i);
-        form = submitButton.parentElement.parentElement;
 
         // Export query functions
-        getByText = app.getByText;
+        getByRole = app.getByRole;
         getByPlaceholderText = app.getByPlaceholderText;
         queryByPlaceholderText = app.queryByPlaceholderText;
     });
@@ -91,7 +90,7 @@ describe('App', () => {
 
     it('sends correct request when valid form is submitted', async () => {
         // Confirm form not validated, output column not rendered
-        expect(form.classList).not.toContainEqual('was-validated');
+        expect(getByRole('form').classList).not.toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
 
         // Populate all fields, click generate button
@@ -118,7 +117,7 @@ describe('App', () => {
         }));
 
         // Confirm form is now validated, output column rendered, img has correct source
-        expect(form.classList).toContainEqual('was-validated');
+        expect(getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mock_image_string'
@@ -127,8 +126,8 @@ describe('App', () => {
 
     it('does not make a request when form is invalid', async () => {
         // Confirm form not validated, output column not rendered
-        expect(form.tagName).toBe('FORM');
-        expect(form.classList).not.toContainEqual('was-validated');
+        expect(getByRole('form').tagName).toBe('FORM');
+        expect(getByRole('form').classList).not.toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
 
         // Click generate button without filling in fields
@@ -140,7 +139,7 @@ describe('App', () => {
         expect(global.fetch).not.toHaveBeenCalled();
 
         // Confirm form is now validated, but output column still did not render
-        expect(form.classList).toContainEqual('was-validated');
+        expect(getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).toBeNull();
     });
 
@@ -211,7 +210,7 @@ describe('App', () => {
         await userEvent.click(submitButton);
 
         // Confirm output column was rendered, img has expected source
-        expect(form.classList).toContainEqual('was-validated');
+        expect(getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mock_image_string'
@@ -242,7 +241,6 @@ describe('App', () => {
         }, { timeout: 500 });
 
         // Confirm new form is not validated
-        const newForm = getByText(/generate/i).parentElement.parentElement;
-        expect(newForm.classList).not.toContainEqual('was-validated');
+        expect(getByRole('form').classList).not.toContainEqual('was-validated');
     });
 });

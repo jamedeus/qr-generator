@@ -108,6 +108,7 @@ exports[`App matches snapshot 1`] = `
         className="d-flex flex-column justify-content-center py-3 h-100 col-md-6"
       >
         <form
+          aria-label="form"
           className=""
           noValidate={true}
           onSubmit={[Function]}

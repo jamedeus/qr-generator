@@ -1,11 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`WifiForm matches snapshot 1`] = `
-<form
-  className=""
-  noValidate={true}
-  onSubmit={[MockFunction]}
->
+[
   <div
     className="mb-3 form-floating"
   >
@@ -19,7 +15,7 @@ exports[`WifiForm matches snapshot 1`] = `
     <label>
       SSID
     </label>
-  </div>
+  </div>,
   <div
     className="mb-3 form-floating"
   >
@@ -33,17 +29,6 @@ exports[`WifiForm matches snapshot 1`] = `
     <label>
       Password
     </label>
-  </div>
-  <div
-    className="d-flex"
-  >
-    <button
-      className="mx-auto btn btn-primary"
-      disabled={false}
-      type="submit"
-    >
-      Generate
-    </button>
-  </div>
-</form>
+  </div>,
+]
 `;

@@ -1,56 +1,20 @@
 import renderer from 'react-test-renderer';
-import {render, fireEvent} from '@testing-library/react';
+import {render} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import ContactForm from '../ContactForm';
 
 describe('ContactForm', () => {
-    // Mock generate hook
-    const mockGenerate = jest.fn(e => e.preventDefault());
-
     it('matches snapshot', () => {
         const component = renderer.create(
-            <ContactForm generate={mockGenerate} validated={false} />
+            <ContactForm />
         );
         let tree = component.toJSON();
         expect(tree).toMatchSnapshot();
     });
 
-    it('calls generate function when button clicked', () => {
-        const { getByText } = render(
-            <ContactForm generate={mockGenerate} validated={false} />
-        );
-
-        const generateButton = getByText(/generate/i);
-        fireEvent.click(generateButton);
-
-        expect(mockGenerate).toHaveBeenCalled();
-    });
-
-    it('shows validation highlights when validated is true', () => {
-        const { getByText } = render(
-            <ContactForm generate={mockGenerate} validated={true} />
-        );
-
-        // Get form element, confirm correct type +  has validated class
-        const form = getByText(/generate/i).parentElement.parentElement;
-        expect(form.tagName).toBe('FORM');
-        expect(form.classList).toContainEqual('was-validated');
-    });
-
-    it('does not show validation highlights when validated is false', () => {
-        const { getByText } = render(
-            <ContactForm generate={mockGenerate} validated={false} />
-        );
-
-        // Get form element, confirm correct type +  does not has validated class
-        const form = getByText(/generate/i).parentElement.parentElement;
-        expect(form.tagName).toBe('FORM');
-        expect(form.classList).not.toContainEqual('was-validated');
-    });
-
     it('formats phone number correctly, blocks invalid characters', async () => {
         const { getByPlaceholderText } = render(
-            <ContactForm generate={mockGenerate} validated={false} />
+            <ContactForm />
         );
 
         const phoneInput = getByPlaceholderText('Phone');
@@ -75,7 +39,7 @@ describe('ContactForm', () => {
 
     it('blocks spaces in email field', async () => {
         const { getByPlaceholderText } = render(
-            <ContactForm generate={mockGenerate} validated={false} />
+            <ContactForm />
         );
 
         const emailInput = getByPlaceholderText('Email');
@@ -86,7 +50,7 @@ describe('ContactForm', () => {
 
     it('requires all fields, correct email and phone format', async () => {
         const { getByPlaceholderText } = render(
-            <ContactForm generate={mockGenerate} validated={false} />
+            <ContactForm />
         );
 
         // Get reference to each field

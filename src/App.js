@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CSSTransition } from "react-transition-group";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
 import Navbar from 'react-bootstrap/Navbar';
 import Dropdown from 'react-bootstrap/Dropdown';
@@ -175,19 +176,36 @@ function App() {
                 <Row className="h-100">
                     {/* Same height as container to vertically center contents */}
                     <Col md={6} className="d-flex flex-column justify-content-center py-3 h-100">
-                        {(() => {
-                            switch(qrType) {
-                                case "contact":
-                                    return <ContactForm generate={generate} validated={validated} />;
-                                case "wifi":
-                                    return <WifiForm generate={generate} validated={validated} />;
-                                case "link":
-                                    return <LinkForm generate={generate} validated={validated} />;
-                                /* istanbul ignore next */
-                                default:
-                                    return null;
-                            }
-                        })()}
+                        <Form
+                            noValidate
+                            validated={validated}
+                            onSubmit={generate}
+                            aria-label="form"
+                        >
+                            {(() => {
+                                switch(qrType) {
+                                    case "contact":
+                                        return <ContactForm />;
+                                    case "wifi":
+                                        return <WifiForm />;
+                                    case "link":
+                                        return <LinkForm />;
+                                    /* istanbul ignore next */
+                                    default:
+                                        return null;
+                                }
+                            })()}
+
+                            <div className="d-flex">
+                                <Button
+                                    variant="primary"
+                                    type="submit"
+                                    className="mx-auto"
+                                >
+                                    Generate
+                                </Button>
+                            </div>
+                        </Form>
                     </Col>
                     <CSSTransition
                         in={qrVisible}
