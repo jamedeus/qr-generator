@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CSSTransition } from "react-transition-group";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -33,9 +33,13 @@ function App() {
         setValidated(false);
         // Fade out and unmount old QR code
         setQrVisible(false);
-        // Mobile: scroll back to top
-        window.scroll({ top: 0, behavior: 'smooth' });
     };
+
+    // Mobile: Scroll to bottom when QR shown, scroll to top when hidden
+    useEffect(() => {
+        const top = qrVisible ? document.body.scrollHeight : 0;
+        window.scroll({ top: top, behavior: 'smooth' });
+    }, [qrVisible]);
 
     // Called by generate buttons, takes submit event as arg
     async function generate(event) {
@@ -69,8 +73,6 @@ function App() {
             setQrString(result);
             setQrVisible(true);
             console.log(result);
-            // Mobile: scroll to QR code at bottom of page
-            window.scroll({ top: document.body.scrollHeight, behavior: 'smooth' });
         } else {
             const error = await response.text();
             alert(error);

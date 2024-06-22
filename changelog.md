@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.1.2
+
+* Bug fix: No longer fails to scroll QR code into view on mobile layout
+
 ### 1.1.1
 
 * Bug fix: Prevent scrolling to empty area after changing form (mobile)
