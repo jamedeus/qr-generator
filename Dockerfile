@@ -30,6 +30,7 @@ COPY --from=node_build dist/ /mnt/dist/
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf
 
 # Install python dependencies
 COPY requirements.txt /mnt/requirements.txt

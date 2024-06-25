@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.1.3
+
+* Bug fix: Add missing font to docker image
+
 ### 1.1.2
 
 * Bug fix: No longer fails to scroll QR code into view on mobile layout
