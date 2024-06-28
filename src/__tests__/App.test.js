@@ -209,7 +209,7 @@ describe('App', () => {
         await user.click(app.getByText('Generate'));
 
         // Click hide caption button
-        await user.click(app.getByText('Hide caption'));
+        await user.click(app.getByText('Hide text'));
 
         // Click download button
         const downloadButton = app.getByText("Download");
@@ -284,13 +284,13 @@ describe('App', () => {
         );
 
         // Click hide caption button, confirm switched to QR without caption
-        await user.click(app.getByText('Hide caption'));
+        await user.click(app.getByText('Hide text'));
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mockImageWithNoCaption'
         );
 
         // Click show caption button, confirm switched back
-        await user.click(app.getByText('Show caption'));
+        await user.click(app.getByText('Show text'));
         expect(app.container.querySelector('img').src).toBe(
             'data:image/png;base64,mockImageWithCaption'
         );

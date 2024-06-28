@@ -146,7 +146,7 @@ function App() {
         return (
             <Col md={6} className='d-flex flex-column justify-content-center py-3 h-100'>
                 {/* Hidden button to vertically center QR code */}
-                <Button as="a" className="my-3 invisible">D</Button>
+                <Button as="a" className="m-2 mb-3 invisible">D</Button>
 
                 {/* QR code image */}
                 <img src={`data:image/png;base64,${
@@ -154,13 +154,13 @@ function App() {
                 }`} />
 
                 {/* Download and hide/show caption buttons */}
-                <div className="mx-auto d-flex">
+                <div className="d-flex mx-auto mt-2">
                     <Button
                         variant="primary"
                         className="m-2"
                         onClick={() => setCaptionVisible(!captionVisible)}
                     >
-                        {captionVisible? "Hide caption" : "Show caption"}
+                        {captionVisible? "Hide text" : "Show text"}
                     </Button>
                     <Button
                         variant="primary"
