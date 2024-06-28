@@ -1,40 +1,5 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`App correctly handles downloadQR function 1`] = `
-[MockFunction] {
-  "calls": [
-    [
-      [
-        Uint8Array [
-          98,
-          97,
-          115,
-          101,
-          54,
-          52,
-          95,
-          115,
-          116,
-          114,
-          105,
-          110,
-          103,
-        ],
-      ],
-      {
-        "type": "image/png",
-      },
-    ],
-  ],
-  "results": [
-    {
-      "type": "return",
-      "value": undefined,
-    },
-  ],
-}
-`;
-
 exports[`App matches snapshot 1`] = `
 {
   "asFragment": [Function],
@@ -532,5 +497,80 @@ exports[`App matches snapshot 1`] = `
   "queryByTitle": [Function],
   "rerender": [Function],
   "unmount": [Function],
+}
+`;
+
+exports[`App sends correct payload when qr with caption is downloaded 1`] = `
+[MockFunction] {
+  "calls": [
+    [
+      [
+        Uint8Array [
+          154,
+          135,
+          36,
+          34,
+          102,
+          160,
+          121,
+          104,
+          173,
+          132,
+          38,
+          169,
+          182,
+          42,
+          39,
+        ],
+      ],
+      {
+        "type": "image/png",
+      },
+    ],
+  ],
+  "results": [
+    {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
+}
+`;
+
+exports[`App sends correct payload when qr with no caption is downloaded 1`] = `
+[MockFunction] {
+  "calls": [
+    [
+      [
+        Uint8Array [
+          154,
+          135,
+          36,
+          34,
+          102,
+          160,
+          121,
+          104,
+          173,
+          132,
+          218,
+          2,
+          106,
+          155,
+          98,
+          162,
+        ],
+      ],
+      {
+        "type": "image/png",
+      },
+    ],
+  ],
+  "results": [
+    {
+      "type": "return",
+      "value": undefined,
+    },
+  ],
 }
 `;

@@ -10,7 +10,10 @@ describe('App', () => {
         // Mock fetch function
         global.fetch = jest.fn(() => Promise.resolve({
             ok: true,
-            text: () => Promise.resolve('mock_image_string')
+            json: () => Promise.resolve({
+                caption: 'mockImageWithCaption',
+                no_caption: 'mockImageWithNoCaption'
+            })
         }));
 
         // Mock window.scroll, mock window height to 500px
@@ -106,7 +109,7 @@ describe('App', () => {
         expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
-            'data:image/png;base64,mock_image_string'
+            'data:image/png;base64,mockImageWithCaption'
         );
 
         // Confirm scrolled down to output column
@@ -156,11 +159,10 @@ describe('App', () => {
         expect(window.scroll).not.toHaveBeenCalled();
     });
 
-    it('correctly handles downloadQR function', async () => {
-        // Mock atob to ignore input and return a known value
-        jest.spyOn(window, 'atob').mockImplementation(() => 'base64_string');
+    it('sends correct payload when qr with caption is downloaded', async () => {
+        jest.spyOn(window, 'atob');
 
-        // Mock Blob function, save reference to confirm data
+        // Mock Blob function, save reference to confirm data later
         const blobMock = jest.fn();
         global.Blob = blobMock;
 
@@ -189,6 +191,41 @@ describe('App', () => {
         expect(downloadButton.download).toBe('contact-qr.png');
     });
 
+    it('sends correct payload when qr with no caption is downloaded', async () => {
+        jest.spyOn(window, 'atob');
+
+        // Mock Blob function, save reference to confirm data later
+        const blobMock = jest.fn();
+        global.Blob = blobMock;
+
+        // Mock createObjectURL to return a known value
+        URL.createObjectURL = jest.fn(() => 'blob:url');
+
+        // Populate fields and click generate to render download button
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
+
+        // Click hide caption button
+        await user.click(app.getByText('Hide caption'));
+
+        // Click download button
+        const downloadButton = app.getByText("Download");
+        await user.click(downloadButton);
+
+        // Confirm Blob was created with correct data
+        expect(blobMock).toMatchSnapshot();
+
+        // Confirm correct URL was generated
+        expect(URL.createObjectURL).toHaveBeenCalled();
+        expect(downloadButton.href).toBe('blob:url');
+
+        // Confirm correct filename
+        expect(downloadButton.download).toBe('contact-qr.png');
+    });
+
     it('unmounts QR code image when form type is changed', async () => {
         // Populate all fields, click generate button
         app.getByPlaceholderText('First Name').value = 'first';
@@ -201,7 +238,7 @@ describe('App', () => {
         expect(app.getByRole('form').classList).toContainEqual('was-validated');
         expect(app.container.querySelector('img')).not.toBeNull();
         expect(app.container.querySelector('img').src).toBe(
-            'data:image/png;base64,mock_image_string'
+            'data:image/png;base64,mockImageWithCaption'
         );
 
         // Confirm scrolled down to output column
@@ -230,6 +267,32 @@ describe('App', () => {
         // Confirm scrolled back to top of page
         expect(window.scroll).toHaveBeenCalledWith(
             { top: 0, behavior: 'smooth' }
+        );
+    });
+
+    it('shows correct QR code when caption buttons are clicked', async () => {
+        // Populate all fields, click generate button
+        app.getByPlaceholderText('First Name').value = 'first';
+        app.getByPlaceholderText('Last Name').value = 'last';
+        app.getByPlaceholderText('Email').value = 'first.last@mail.com';
+        app.getByPlaceholderText('Phone').value = '(123) 456-7890';
+        await user.click(app.getByText('Generate'));
+
+        // Confirm QR code with caption is shown by default
+        expect(app.container.querySelector('img').src).toBe(
+            'data:image/png;base64,mockImageWithCaption'
+        );
+
+        // Click hide caption button, confirm switched to QR without caption
+        await user.click(app.getByText('Hide caption'));
+        expect(app.container.querySelector('img').src).toBe(
+            'data:image/png;base64,mockImageWithNoCaption'
+        );
+
+        // Click show caption button, confirm switched back
+        await user.click(app.getByText('Show caption'));
+        expect(app.container.querySelector('img').src).toBe(
+            'data:image/png;base64,mockImageWithCaption'
         );
     });
 });

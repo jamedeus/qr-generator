@@ -2,6 +2,7 @@
 
 import io
 import os
+import json
 import base64
 from unittest import TestCase
 from unittest.mock import patch
@@ -53,9 +54,15 @@ class EndpointTests(TestCase):
             self.assertEqual(mock_get_font.call_count, 2)
             self.assertEqual(mock_add_text.call_count, 1)
 
-            # Confirm response contains base64-encoded PNG
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
-            self.assertEqual(img.format, 'PNG')
+            # Confirm response contains JSON with caption and no_caption keys
+            data = json.loads(response.data)
+            self.assertEqual(list(data.keys()), ['caption', 'no_caption'])
+
+            # Confirm both keys are base64 strings containing PNGs
+            caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['caption'])))
+            self.assertEqual(caption.format, 'PNG')
+            no_caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['no_caption'])))
+            self.assertEqual(no_caption.format, 'PNG')
 
     def test_generate_wifi_qr(self):
         # Payload sent by frontend
@@ -75,9 +82,15 @@ class EndpointTests(TestCase):
             self.assertEqual(mock_get_font.call_count, 1)
             self.assertEqual(mock_add_text.call_count, 1)
 
-            # Confirm response contains base64-encoded PNG
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
-            self.assertEqual(img.format, 'PNG')
+            # Confirm response contains JSON with caption and no_caption keys
+            data = json.loads(response.data)
+            self.assertEqual(list(data.keys()), ['caption', 'no_caption'])
+
+            # Confirm both keys are base64 strings containing PNGs
+            caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['caption'])))
+            self.assertEqual(caption.format, 'PNG')
+            no_caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['no_caption'])))
+            self.assertEqual(no_caption.format, 'PNG')
 
     def test_generate_link_qr(self):
         # Payload sent by frontend
@@ -97,9 +110,15 @@ class EndpointTests(TestCase):
             self.assertEqual(mock_get_font.call_count, 1)
             self.assertEqual(mock_add_text.call_count, 1)
 
-            # Confirm response contains base64-encoded PNG
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
-            self.assertEqual(img.format, 'PNG')
+            # Confirm response contains JSON with caption and no_caption keys
+            data = json.loads(response.data)
+            self.assertEqual(list(data.keys()), ['caption', 'no_caption'])
+
+            # Confirm both keys are base64 strings containing PNGs
+            caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['caption'])))
+            self.assertEqual(caption.format, 'PNG')
+            no_caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['no_caption'])))
+            self.assertEqual(no_caption.format, 'PNG')
 
     def test_generate_link_with_text(self):
         # Payload sent by frontend
@@ -119,9 +138,15 @@ class EndpointTests(TestCase):
             self.assertEqual(mock_get_font.call_count, 2)
             self.assertEqual(mock_add_text.call_count, 1)
 
-            # Confirm response contains base64-encoded PNG
-            img = PIL.Image.open(io.BytesIO(base64.b64decode(response.data)))
-            self.assertEqual(img.format, 'PNG')
+            # Confirm response contains JSON with caption and no_caption keys
+            data = json.loads(response.data)
+            self.assertEqual(list(data.keys()), ['caption', 'no_caption'])
+
+            # Confirm both keys are base64 strings containing PNGs
+            caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['caption'])))
+            self.assertEqual(caption.format, 'PNG')
+            no_caption = PIL.Image.open(io.BytesIO(base64.b64decode(data['no_caption'])))
+            self.assertEqual(no_caption.format, 'PNG')
 
     def test_generate_invalid_qr_code_type(self):
         # Payload with unsupported QR code type

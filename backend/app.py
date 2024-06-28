@@ -6,7 +6,7 @@ import io
 import json
 import base64
 
-from flask import Flask, request, render_template
+from flask import Flask, request, render_template, jsonify
 
 from contact_qr import ContactQr
 from wifi_qr import WifiQr
@@ -24,6 +24,13 @@ app = Flask(
 def serve():
     '''Serves frontend.'''
     return render_template('index.html')
+
+
+def img_to_base64_string(img):
+    '''Takes PIL.Image, saves to memory buffer, returns as base64 string'''
+    img_buffer = io.BytesIO()
+    img.save(img_buffer, format="PNG")
+    return base64.b64encode(img_buffer.getvalue()).decode("utf-8")
 
 
 @app.post("/generate")
@@ -59,13 +66,11 @@ def generate():
     else:
         return 'Unsupported QR code type', 400
 
-    # Save PNG to memory buffer, convert to base64 string
-    buffered = io.BytesIO()
-    qr.qr_complete.save(buffered, format="PNG")
-    img_bytes = base64.b64encode(buffered.getvalue()).decode("utf-8")
-
-    # Return base64 string
-    return img_bytes
+    # Return JSON containing QR code with and without caption as base64 strings
+    return jsonify({
+        'caption': img_to_base64_string(qr.qr_complete),
+        'no_caption': img_to_base64_string(qr.qr_image)
+    })
 
 
 if __name__ == '__main__':  # pragma: no cover

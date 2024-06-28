@@ -17,8 +17,11 @@ function App() {
     // Default to contact QR code form
     const [qrType, setQrType] = useState('contact');
 
-    // State object for base64 QR code string
-    const [qrString, setQrString] = useState('');
+    // State object containing 2 base64 QR code strings
+    const [qrCodes, setQrCodes] = useState({caption: '', no_caption: ''});
+
+    // State bool controls which base64 string is visible
+    const [captionVisible, setCaptionVisible] = useState(true);
 
     // State object for QR code visibility (controls fade effect)
     const [qrVisible, setQrVisible] = useState(false);
@@ -68,9 +71,9 @@ function App() {
         });
 
         if (response.ok) {
-            // Write result string to state object, show QR code
-            const result = await response.text();
-            setQrString(result);
+            // Write result JSON to state object, show QR code
+            const result = await response.json();
+            setQrCodes(result);
             setQrVisible(true);
             console.log(result);
         } else {
@@ -81,8 +84,13 @@ function App() {
 
     // Decodes base64 image string from event to binary, serves download
     function downloadQR(event) {
-        // Decode base64 image data to binary
-        const imageData = atob(qrString);
+        // Decode base64 image data for visible QR code to binary
+        let imageData;
+        if (captionVisible) {
+            imageData = atob(qrCodes.caption);
+        } else {
+            imageData = atob(qrCodes.no_caption);
+        }
 
         // Create Uint8Array with same length
         const imageBuffer = new ArrayBuffer(imageData.length);
@@ -140,16 +148,29 @@ function App() {
                 {/* Hidden button to vertically center QR code */}
                 <Button as="a" className="my-3 invisible">D</Button>
 
-                {/* Output image + download button */}
-                <img src={"data:image/png;base64," + qrString} />
-                <Button
-                    variant="primary"
-                    as="a"
-                    className="my-3 mx-auto"
-                    onClick={downloadQR}
-                >
-                    Download
-                </Button>
+                {/* QR code image */}
+                <img src={`data:image/png;base64,${
+                    captionVisible ? qrCodes.caption : qrCodes.no_caption
+                }`} />
+
+                {/* Download and hide/show caption buttons */}
+                <div className="mx-auto d-flex">
+                    <Button
+                        variant="primary"
+                        className="m-2"
+                        onClick={() => setCaptionVisible(!captionVisible)}
+                    >
+                        {captionVisible? "Hide caption" : "Show caption"}
+                    </Button>
+                    <Button
+                        variant="primary"
+                        as="a"
+                        className="m-2"
+                        onClick={downloadQR}
+                    >
+                        Download
+                    </Button>
+                </div>
             </Col>
         );
     };
