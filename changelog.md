@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.2.0
+
+* Add button to hide/show QR code text caption
+
 ### 1.1.3
 
 * Bug fix: Add missing font to docker image
