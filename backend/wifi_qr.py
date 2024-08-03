@@ -27,11 +27,11 @@ class WifiQr(Qr):
         # Create QR code
         self.generate()
 
-    def generate_qr_code(self):
+    def _generate_qr_code(self):
         '''Returns pyqrcode instance with wifi credentials from class attributes.'''
         return pyqrcode.create(f"WIFI:T:WPA;S:{self.ssid};P:{self.password};;")
 
-    def generate_caption(self):
+    def _generate_caption(self):
         '''Returns list of caption dicts used by Qr.add_text method.'''
 
         # Get font size for longest param, format so shorter is centered above/below
@@ -54,7 +54,7 @@ class WifiQr(Qr):
             ssid = f"SSID: {' '*padding_front}{self.ssid}{' '*padding}"
             password = f"PASS: {self.password}"
 
-        font = self.get_font(ssid, self.MONO_FONT, 64)
+        font = self._get_font(ssid, self._MONO_FONT, 64)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image

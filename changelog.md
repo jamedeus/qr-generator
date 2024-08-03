@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.2.1
+
+* Improve code quality
+
 ### 1.2.0
 
 * Add button to hide/show QR code text caption

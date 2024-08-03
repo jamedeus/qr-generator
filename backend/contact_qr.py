@@ -30,7 +30,7 @@ class ContactQr(Qr):
         # Create QR code
         self.generate()
 
-    def generate_qr_code(self):
+    def _generate_qr_code(self):
         '''Returns pyqrcode instance with contact info from class attributes.'''
 
         # Remove non-numeric characters
@@ -40,16 +40,16 @@ class ContactQr(Qr):
             f"MECARD:N:{self.last_name},{self.first_name};TEL:{phone};EMAIL:{self.email};"
         )
 
-    def generate_caption(self):
+    def _generate_caption(self):
         '''Returns list of caption dicts used by Qr.add_text method.'''
 
         # Create name string, get font size
         name = f"{self.first_name} {self.last_name}"
-        name_font = self.get_font(name, self.SANS_FONT_BOLD, 42)
+        name_font = self._get_font(name, self._SANS_FONT_BOLD, 42)
 
         # Create contact info string, get font size (at least 6 points smaller than name)
         info = f"{self.email}\n{self.phone}"
-        info_font = self.get_font(info, self.SANS_FONT, name_font.size - 6)
+        info_font = self._get_font(info, self._SANS_FONT, name_font.size - 6)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image

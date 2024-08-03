@@ -33,15 +33,15 @@ class LinkQr(Qr):
         # Create QR code
         self.generate()
 
-    def generate_qr_code(self):
+    def _generate_qr_code(self):
         '''Returns pyqrcode instance with URL from class attribute.'''
         return pyqrcode.create(f'{self.url}')
 
-    def generate_caption(self):
+    def _generate_caption(self):
         '''Returns list of caption dicts used by Qr.add_text method.'''
 
         # Get font, remove protocol and "_QR" from caption for readability
-        font = self.get_font(self.filename[:-3], self.MONO_FONT, 42)
+        font = self._get_font(self.filename[:-3], self._MONO_FONT, 42)
 
         # List of dicts
         # Each dict contains text + font for 1 line under QR image
@@ -51,7 +51,7 @@ class LinkQr(Qr):
 
         # If text given add above URL in bold + larger font
         if self.text:
-            font = self.get_font(self.text, self.MONO_FONT_BOLD, 72)
+            font = self._get_font(self.text, self._MONO_FONT_BOLD, 72)
             caption.insert(0, {'text': self.text, 'font': font})
 
         return caption

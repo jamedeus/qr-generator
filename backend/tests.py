@@ -1,4 +1,4 @@
-# pylint: disable=missing-docstring
+# pylint: disable=missing-docstring, protected-access
 
 import io
 import os
@@ -45,8 +45,8 @@ class EndpointTests(TestCase):
         }
 
         # Patch Qr methods to return dummy font and image
-        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
-             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+        with patch.object(Qr, '_get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, '_add_text', return_value=self.dummy_image) as mock_add_text:
 
             # Send post request, confirm status, confirm methods called
             response = self.app.post('/generate', json=payload, content_type='application/json')
@@ -73,8 +73,8 @@ class EndpointTests(TestCase):
         }
 
         # Patch Qr methods to return dummy font and image
-        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
-             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+        with patch.object(Qr, '_get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, '_add_text', return_value=self.dummy_image) as mock_add_text:
 
             # Send post request, confirm status, confirm methods called
             response = self.app.post('/generate', json=payload, content_type='application/json')
@@ -101,8 +101,8 @@ class EndpointTests(TestCase):
         }
 
         # Patch Qr methods to return dummy font and image
-        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
-             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+        with patch.object(Qr, '_get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, '_add_text', return_value=self.dummy_image) as mock_add_text:
 
             # Send post request, confirm status, confirm methods called
             response = self.app.post('/generate', json=payload, content_type='application/json')
@@ -129,8 +129,8 @@ class EndpointTests(TestCase):
         }
 
         # Patch Qr methods to return dummy font and image
-        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
-             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+        with patch.object(Qr, '_get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, '_add_text', return_value=self.dummy_image) as mock_add_text:
 
             # Send post request, confirm status, confirm methods called
             response = self.app.post('/generate', json=payload, content_type='application/json')
@@ -157,8 +157,8 @@ class EndpointTests(TestCase):
         }
 
         # Patch Qr methods to return dummy font and image
-        with patch.object(Qr, 'get_font', return_value=self.dummy_font) as mock_get_font, \
-             patch.object(Qr, 'add_text', return_value=self.dummy_image) as mock_add_text:
+        with patch.object(Qr, '_get_font', return_value=self.dummy_font) as mock_get_font, \
+             patch.object(Qr, '_add_text', return_value=self.dummy_image) as mock_add_text:
 
             # Send post request, confirm expected error is returned
             response = self.app.post('/generate', json=payload, content_type='application/json')
@@ -176,13 +176,13 @@ class QrBaseClassTests(TestCase):
         # Should raise exception (method must be implemented by subclass)
         qr = Qr()
         with self.assertRaises(NotImplementedError):
-            qr.generate_qr_code()
+            qr._generate_qr_code()
 
     def test_generate_caption_method(self):
         # Should raise exception (method must be implemented by subclass)
         qr = Qr()
         with self.assertRaises(NotImplementedError):
-            qr.generate_caption()
+            qr._generate_caption()
 
 
 class ContactQrTests(TestCase):
@@ -206,13 +206,13 @@ class ContactQrTests(TestCase):
         self.assertEqual(qr.filename, 'John-Doe_contact')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'John Doe')
-        self.assertEqual(qr.caption[1]['text'], 'johnathan.doeth@hotmail.com\n(212) 555-1234')
-        self.assertEqual(len(qr.caption), 2)
+        self.assertEqual(qr._caption[0]['text'], 'John Doe')
+        self.assertEqual(qr._caption[1]['text'], 'johnathan.doeth@hotmail.com\n(212) 555-1234')
+        self.assertEqual(len(qr._caption), 2)
 
         # Confirm attributes have correct instance types
-        self.assertIsInstance(qr.caption[0]['font'], PIL.ImageFont.FreeTypeFont)
-        self.assertIsInstance(qr.caption[1]['font'], PIL.ImageFont.FreeTypeFont)
+        self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
+        self.assertIsInstance(qr._caption[1]['font'], PIL.ImageFont.FreeTypeFont)
         self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
@@ -242,9 +242,9 @@ class ContactQrTests(TestCase):
         self.assertEqual(qr.filename, 'John-Doe_contact')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'John Doe')
-        self.assertEqual(qr.caption[1]['text'], 'johnathan.doeth@hotmail.com\n(212) 555-1234')
-        self.assertEqual(len(qr.caption), 2)
+        self.assertEqual(qr._caption[0]['text'], 'John Doe')
+        self.assertEqual(qr._caption[1]['text'], 'johnathan.doeth@hotmail.com\n(212) 555-1234')
+        self.assertEqual(len(qr._caption), 2)
 
 
 class WifiQrTests(TestCase):
@@ -264,13 +264,13 @@ class WifiQrTests(TestCase):
         self.assertEqual(qr.filename, 'mywifi_Wifi_QR')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'SSID: mywifi ')
-        self.assertEqual(qr.caption[1]['text'], 'PASS: hunter2')
-        self.assertEqual(len(qr.caption), 2)
+        self.assertEqual(qr._caption[0]['text'], 'SSID: mywifi ')
+        self.assertEqual(qr._caption[1]['text'], 'PASS: hunter2')
+        self.assertEqual(len(qr._caption), 2)
 
         # Confirm attributes have correct instance types
-        self.assertIsInstance(qr.caption[0]['font'], PIL.ImageFont.FreeTypeFont)
-        self.assertIsInstance(qr.caption[1]['font'], PIL.ImageFont.FreeTypeFont)
+        self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
+        self.assertIsInstance(qr._caption[1]['font'], PIL.ImageFont.FreeTypeFont)
         self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
@@ -295,9 +295,9 @@ class WifiQrTests(TestCase):
         self.assertEqual(qr.filename, 'short_Wifi_QR')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'SSID:        short        ')
-        self.assertEqual(qr.caption[1]['text'], 'PASS: looooooooooooooooong')
-        self.assertEqual(len(qr.caption), 2)
+        self.assertEqual(qr._caption[0]['text'], 'SSID:        short        ')
+        self.assertEqual(qr._caption[1]['text'], 'PASS: looooooooooooooooong')
+        self.assertEqual(len(qr._caption), 2)
 
 
 class LinkQrTests(TestCase):
@@ -317,11 +317,11 @@ class LinkQrTests(TestCase):
         self.assertEqual(qr.filename, 'jamedeus.com_QR')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'jamedeus.com')
-        self.assertEqual(len(qr.caption), 1)
+        self.assertEqual(qr._caption[0]['text'], 'jamedeus.com')
+        self.assertEqual(len(qr._caption), 1)
 
         # Confirm attributes have correct instance types
-        self.assertIsInstance(qr.caption[0]['font'], PIL.ImageFont.FreeTypeFont)
+        self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
         self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
@@ -346,8 +346,8 @@ class LinkQrTests(TestCase):
         self.assertEqual(qr.filename, 'jamedeus.com_QR')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'jamedeus.com')
-        self.assertEqual(len(qr.caption), 1)
+        self.assertEqual(qr._caption[0]['text'], 'jamedeus.com')
+        self.assertEqual(len(qr._caption), 1)
 
     def test_link_no_protocol(self):
         # Instantiate, nothing to remove off for filename
@@ -356,5 +356,5 @@ class LinkQrTests(TestCase):
         self.assertEqual(qr.filename, 'jamedeus.com_QR')
 
         # Confirm correct text under QR
-        self.assertEqual(qr.caption[0]['text'], 'jamedeus.com')
-        self.assertEqual(len(qr.caption), 1)
+        self.assertEqual(qr._caption[0]['text'], 'jamedeus.com')
+        self.assertEqual(len(qr._caption), 1)
