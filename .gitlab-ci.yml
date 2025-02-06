@@ -17,8 +17,6 @@ test_backend:
     - pipenv run coverage run -m unittest discover backend/
     - pipenv run coverage report
   coverage: '/TOTAL.*\s+(\d+\.\d+\%)$/'
-  only:
-    - master
 
 test_frontend:
   stage: test
@@ -30,13 +28,11 @@ test_frontend:
     - npm install
     - npm test -- --coverage
   coverage: '/All files[^\|]*\|[^\|]*\s+([\d\.]+)/'
-  only:
-    - master
 
 # Update pylint badge
 pylint:
   stage: test
-  image: python:3.10-bullseye
+  image: python:3.13-slim-bookworm
   tags:
     - nas
     - docker
