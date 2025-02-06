@@ -89,7 +89,7 @@ class Qr():
 
         # Start at max size, decrease until text fits
         font = ImageFont.truetype(font_path, max_size)
-        while draw.textsize(text, font)[0] > max_width:
+        while draw.textbbox((0, 0), text, font)[2] > max_width:
             max_size -= 1
             font = ImageFont.truetype(font_path, max_size)
 
@@ -108,7 +108,11 @@ class Qr():
 
         # Iterate rows, calculate height, add to add_height
         for row in self._caption:
-            row_width, row_height = draw.textsize(row['text'], row['font'])
+            _, _, row_width, row_height = draw.textbbox(
+                xy=(0, 0),
+                text=row['text'],
+                font=row['font']
+            )
             add_height += row_height
 
         # Create empty space for text
@@ -135,7 +139,11 @@ class Qr():
 
         # Iterate rows again, calculate position, add text
         for row in self._caption:
-            row_width, row_height = draw.textsize(row['text'], row['font'])
+            _, _, row_width, row_height = draw.textbbox(
+                xy=(0, 0),
+                text=row['text'],
+                font=row['font']
+            )
 
             # Calc info position, add text
             x = (self.qr_image.width - row_width) // 2
