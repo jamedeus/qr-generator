@@ -19,7 +19,7 @@ FROM ubuntu:jammy AS font_stage
 RUN apt-get update && apt-get install -y fonts-ubuntu
 
 # Final build stage
-FROM python:3.13-slim-bookworm
+FROM python:3.13-alpine
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PATH="/usr/local/bin:${PATH}"
