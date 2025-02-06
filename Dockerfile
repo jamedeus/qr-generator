@@ -18,20 +18,11 @@ RUN npm run build
 FROM ubuntu:jammy AS font_stage
 RUN apt-get update && apt-get install -y fonts-ubuntu
 
-# Final build stage
-FROM python:3.13-alpine
+
+# Python build stage
+FROM python:3.13-alpine AS py_build
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
-ENV PATH="/usr/local/bin:${PATH}"
-
-# Copy node dependencies to final build stage
-COPY --from=node_build dist/ /mnt/dist/
-
-# Copy Ubuntu fonts to final build stage
-COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
-COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf
-COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf
-COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf
 
 # Convert pipfile to requirements.txt, install dependencies
 COPY Pipfile .
@@ -39,6 +30,25 @@ COPY Pipfile.lock .
 RUN pip install pipenv
 RUN pipenv requirements > requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
+
+
+# Deploy stage
+FROM python:3.13-alpine
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+ENV PATH="/usr/local/bin:${PATH}"
+
+# Copy node dependencies to deploy stage
+COPY --from=node_build dist/ /mnt/dist/
+
+# Copy Ubuntu fonts to deploy stage
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf
+COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf
+
+# Copy python dependencies from build stage
+COPY --from=py_build /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
 
 # Copy app, run
 COPY backend/ /mnt/backend
