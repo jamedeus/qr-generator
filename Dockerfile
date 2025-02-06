@@ -33,9 +33,12 @@ COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-R.ttf /usr/share/
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-R.ttf
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf
 
-# Install python dependencies
-COPY requirements.txt /mnt/requirements.txt
-RUN pip install --no-cache-dir -r /mnt/requirements.txt
+# Convert pipfile to requirements.txt, install dependencies
+COPY Pipfile .
+COPY Pipfile.lock .
+RUN pip install pipenv
+RUN pipenv requirements > requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy app, run
 COPY backend/ /mnt/backend
