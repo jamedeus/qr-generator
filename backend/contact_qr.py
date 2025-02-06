@@ -1,6 +1,6 @@
 '''Subclass of Qr for generating contact info QR codes.'''
 
-import pyqrcode
+import segno
 
 from qr import Qr
 
@@ -31,13 +31,14 @@ class ContactQr(Qr):
         self.generate()
 
     def _generate_qr_code(self):
-        '''Returns pyqrcode instance with contact info from class attributes.'''
+        '''Returns segno instance with contact info from class attributes.'''
 
         # Remove non-numeric characters
         phone = ''.join(c for c in self.phone if c.isdigit())
 
-        return pyqrcode.create(
-            f"MECARD:N:{self.last_name},{self.first_name};TEL:{phone};EMAIL:{self.email};"
+        return segno.make(
+            f"MECARD:N:{self.last_name},{self.first_name};TEL:{phone};EMAIL:{self.email};",
+            micro=False
         )
 
     def _generate_caption(self):

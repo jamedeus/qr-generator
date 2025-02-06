@@ -8,7 +8,7 @@ from unittest import TestCase
 from unittest.mock import patch
 
 import PIL
-import pyqrcode
+import segno
 
 from qr import Qr
 from contact_qr import ContactQr
@@ -213,7 +213,7 @@ class ContactQrTests(TestCase):
         # Confirm attributes have correct instance types
         self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
         self.assertIsInstance(qr._caption[1]['font'], PIL.ImageFont.FreeTypeFont)
-        self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
+        self.assertIsInstance(qr.qr_raw, segno.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 
@@ -271,7 +271,7 @@ class WifiQrTests(TestCase):
         # Confirm attributes have correct instance types
         self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
         self.assertIsInstance(qr._caption[1]['font'], PIL.ImageFont.FreeTypeFont)
-        self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
+        self.assertIsInstance(qr.qr_raw, segno.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 
@@ -322,7 +322,7 @@ class LinkQrTests(TestCase):
 
         # Confirm attributes have correct instance types
         self.assertIsInstance(qr._caption[0]['font'], PIL.ImageFont.FreeTypeFont)
-        self.assertIsInstance(qr.qr_raw, pyqrcode.QRCode)
+        self.assertIsInstance(qr.qr_raw, segno.QRCode)
         self.assertIsInstance(qr.qr_image, PIL.PngImagePlugin.PngImageFile)
         self.assertIsInstance(qr.qr_complete, PIL.Image.Image)
 

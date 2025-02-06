@@ -2,6 +2,11 @@
 
 ## v1
 
+### 1.3.0
+
+* Update dependencies
+* Optimize docker image (reduce size 43.5%)
+
 ### 1.2.1
 
 * Improve code quality
