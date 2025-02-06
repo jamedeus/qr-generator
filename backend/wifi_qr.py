@@ -1,6 +1,6 @@
 '''Subclass of Qr for generating wifi network QR codes.'''
 
-import pyqrcode
+import segno
 
 from qr import Qr
 
@@ -28,8 +28,8 @@ class WifiQr(Qr):
         self.generate()
 
     def _generate_qr_code(self):
-        '''Returns pyqrcode instance with wifi credentials from class attributes.'''
-        return pyqrcode.create(f"WIFI:T:WPA;S:{self.ssid};P:{self.password};;")
+        '''Returns segno instance with wifi credentials from class attributes.'''
+        return segno.make(f"WIFI:T:WPA;S:{self.ssid};P:{self.password};;", micro=False)
 
     def _generate_caption(self):
         '''Returns list of caption dicts used by Qr.add_text method.'''

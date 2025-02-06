@@ -1,6 +1,6 @@
 '''Subclass of Qr for generating link QR codes.'''
 
-import pyqrcode
+import segno
 
 from qr import Qr
 
@@ -34,8 +34,8 @@ class LinkQr(Qr):
         self.generate()
 
     def _generate_qr_code(self):
-        '''Returns pyqrcode instance with URL from class attribute.'''
-        return pyqrcode.create(f'{self.url}')
+        '''Returns segno instance with URL from class attribute.'''
+        return segno.make(f'{self.url}', micro=False)
 
     def _generate_caption(self):
         '''Returns list of caption dicts used by Qr.add_text method.'''

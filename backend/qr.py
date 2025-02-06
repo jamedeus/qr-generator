@@ -69,11 +69,11 @@ class Qr():
         '''
 
         # Calc scale needed for requested size
-        scale = int(size / self.qr_raw.get_png_size())
+        scale = int(size / self.qr_raw.symbol_size(border=3)[0])
 
         # Write QR to PNG in mem buffer
         image = io.BytesIO()
-        self.qr_raw.png(image, scale=scale)
+        self.qr_raw.save(image, scale=scale, border=3, kind='png')
 
         # Return PIL object instantiated from buffer
         return Image.open(image)
