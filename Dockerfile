@@ -49,6 +49,7 @@ COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/UbuntuMono-B.ttf /usr/sh
 
 # Copy python dependencies from build stage
 COPY --from=py_build /usr/local/lib/python3.13/site-packages/ /usr/local/lib/python3.13/site-packages/
+COPY --from=py_build /usr/local/bin/gunicorn /usr/local/bin/gunicorn
 
 # Copy app, run
 COPY backend/ /mnt/backend

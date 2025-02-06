@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.3.1
+
+* Bug fix: Missing dependency
+
 ### 1.3.0
 
 * Update dependencies
