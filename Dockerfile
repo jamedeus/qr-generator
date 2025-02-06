@@ -7,6 +7,7 @@ FROM node:19-buster-slim AS node_build
 COPY src/ ./src/
 COPY .babelrc .
 COPY package.json .
+COPY package-lock.json .
 COPY webpack.config.js .
 
 # Install dependencies, build frontend
