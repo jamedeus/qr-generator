@@ -2,6 +2,10 @@
 
 ## v1
 
+### 1.3.2
+
+* Frontend performance optimizations
+
 ### 1.3.1
 
 * Bug fix: Missing dependency
