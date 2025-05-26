@@ -3,6 +3,8 @@
 # Node dependencies build stage
 FROM node:19-buster-slim AS node_build
 
+WORKDIR /build
+
 # Copy source files
 COPY src/ ./src/
 COPY .babelrc .
@@ -24,6 +26,8 @@ FROM python:3.13-alpine AS py_build
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
+WORKDIR /build
+
 # Convert pipfile to requirements.txt, install dependencies
 COPY Pipfile .
 COPY Pipfile.lock .
@@ -39,7 +43,7 @@ ENV PYTHONUNBUFFERED=1
 ENV PATH="/usr/local/bin:${PATH}"
 
 # Copy node dependencies to deploy stage
-COPY --from=node_build dist/ /mnt/dist/
+COPY --from=node_build /build/dist/ /mnt/dist/
 
 # Copy Ubuntu fonts to deploy stage
 COPY --from=font_stage /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf /usr/share/fonts/truetype/ubuntu/Ubuntu-B.ttf
