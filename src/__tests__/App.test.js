@@ -1,6 +1,5 @@
 import userEvent from "@testing-library/user-event";
 import { render, waitFor } from '@testing-library/react';
-import { ThemeProvider } from '../DarkMode.js';
 import App from '../App';
 
 describe('App', () => {
@@ -24,21 +23,13 @@ describe('App', () => {
 
         // Render component, create userEvent instance
         user = userEvent.setup();
-        app = render(
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
-        );
+        app = render(<App />);
 
         jest.clearAllMocks();
     });
 
     it('matches snapshot', () => {
-        const component = render(
-            <ThemeProvider>
-                <App />
-            </ThemeProvider>
-        );
+        const component = render(<App />);
         expect(component).toMatchSnapshot();
     });
 

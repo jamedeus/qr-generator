@@ -9,7 +9,7 @@ import Container from 'react-bootstrap/Container';
 import QrTypeDropdown from './QrTypeDropdown';
 import OutputColumn from './OutputColumn';
 import SelectedForm from './SelectedForm';
-import { DarkModeButton } from './DarkMode';
+import DarkModeButton from './DarkModeButton';
 
 function App() {
     // Default to contact QR code form

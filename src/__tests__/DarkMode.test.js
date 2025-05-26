@@ -1,13 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { render } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { ThemeContext, ThemeProvider, DarkModeButton } from '../DarkMode.js';
-
-// Consumes theme state, renders current value in div
-const ExposeStateObject = () => {
-    const { theme } = useContext(ThemeContext);
-    return <div data-testid="theme">{theme}</div>;
-};
+import DarkModeButton from '../DarkModeButton.js';
 
 describe('DarkModeButton', () => {
     // Reset localStorage theme after each test
@@ -20,11 +14,7 @@ describe('DarkModeButton', () => {
         localStorage.setItem('theme', 'light');
 
         // Render, should match light mode snapshot
-        const { getByRole } = render(
-            <ThemeProvider>
-                <DarkModeButton />
-            </ThemeProvider>
-        );
+        const { getByRole } = render(<DarkModeButton />);
         expect(getByRole('button')).toMatchSnapshot();
     });
 
@@ -33,46 +23,13 @@ describe('DarkModeButton', () => {
         localStorage.setItem('theme', 'dark');
 
         // Render, should match dark mode snapshot
-        const { getByRole } = render(
-            <ThemeProvider>
-                <DarkModeButton />
-            </ThemeProvider>
-        );
+        const { getByRole } = render(<DarkModeButton />);
         expect(getByRole('button')).toMatchSnapshot();
-    });
-
-    it('toggles state object when clicked', async () => {
-        const user = userEvent.setup();
-        // Render button and test component that exposes state value
-        const { getByRole, getByTestId } = render(
-            <ThemeProvider>
-                <DarkModeButton />
-                <ExposeStateObject />
-            </ThemeProvider>
-        );
-        const darkModeButton = getByRole('button');
-
-        // Confirm defaulted to light mode
-        expect(getByTestId('theme').innerHTML).toBe('light');
-
-        // Click button, confirm state and button title change
-        await user.click(darkModeButton);
-        expect(darkModeButton.title).toBe('Switch to light mode');
-        expect(getByTestId('theme').innerHTML).toBe('dark');
-
-        // Click button again, confirm state and button title change back
-        await user.click(darkModeButton);
-        expect(darkModeButton.title).toBe('Switch to dark mode');
-        expect(getByTestId('theme').innerHTML).toBe('light');
     });
 
     it('saves theme to localStorage when clicked', async () => {
         const user = userEvent.setup();
-        const { getByRole } = render(
-            <ThemeProvider>
-                <DarkModeButton />
-            </ThemeProvider>
-        );
+        const { getByRole } = render(<DarkModeButton />);
         const darkModeButton = getByRole('button');
 
         // Confirm localStorage theme is not set before user clicks button
