@@ -1,6 +1,6 @@
 import React from 'react';
 import { createRoot } from 'react-dom/client';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './style.scss';
 import 'smoothscroll-polyfill/dist/smoothscroll.min.js';
 import './style.css';
 import { ThemeProvider } from './DarkMode.js';

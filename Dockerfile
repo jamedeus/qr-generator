@@ -8,7 +8,7 @@ COPY src/ ./src/
 COPY .babelrc .
 COPY package.json .
 COPY package-lock.json .
-COPY webpack.config.js .
+COPY webpack.config.cjs .
 
 # Install dependencies, build frontend
 RUN npm install
