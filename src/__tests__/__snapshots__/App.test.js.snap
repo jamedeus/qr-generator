@@ -45,9 +45,9 @@ exports[`App matches snapshot 1`] = `
               <button
                 aria-expanded="false"
                 class="d-flex my-auto px-2 dropdown-toggle btn btn-primary"
-                data-testid="dropdown"
                 id="react-aria-:r0:"
                 style="font-size: 1.25rem;"
+                title="Change QR code type"
                 type="button"
               >
                 <svg
@@ -196,9 +196,9 @@ exports[`App matches snapshot 1`] = `
               <button
                 aria-expanded="false"
                 class="d-flex my-auto px-2 dropdown-toggle btn btn-primary"
-                data-testid="dropdown"
                 id="react-aria-:r1:"
                 style="font-size: 1.25rem;"
+                title="Change QR code type"
                 type="button"
               >
                 <svg
@@ -348,9 +348,9 @@ exports[`App matches snapshot 1`] = `
             <button
               aria-expanded="false"
               class="d-flex my-auto px-2 dropdown-toggle btn btn-primary"
-              data-testid="dropdown"
               id="react-aria-:r1:"
               style="font-size: 1.25rem;"
+              title="Change QR code type"
               type="button"
             >
               <svg

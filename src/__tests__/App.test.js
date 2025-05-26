@@ -49,7 +49,7 @@ describe('App', () => {
         expect(app.queryByPlaceholderText('URL')).toBeNull();
 
         // Click top-right menu button, click Wifi option
-        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByTitle('Change QR code type'));
         await user.click(app.getByText('Wifi'));
 
         // Confirm Wifi form is mounted, other forms are not
@@ -58,7 +58,7 @@ describe('App', () => {
         expect(app.queryByPlaceholderText('URL')).toBeNull();
 
         // Click top-right menu button, click Link option
-        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByTitle('Change QR code type'));
         await user.click(app.getByText('Link'));
 
         // Confirm Link form is mounted, other forms are not
@@ -67,7 +67,7 @@ describe('App', () => {
         expect(app.queryByPlaceholderText('URL').nodeName).toBe('INPUT');
 
         // Click top-right menu button, click Contact option
-        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByTitle('Change QR code type'));
         await user.click(app.getByText('Contact'));
 
         // Confirm Contact form is mounted, other forms are not
@@ -226,7 +226,7 @@ describe('App', () => {
         expect(downloadButton.download).toBe('contact-qr.png');
     });
 
-    it('unmounts QR code image when form type is changed', async () => {
+    it('unmounts QR code image when type is changed', async () => {
         // Populate all fields, click generate button
         app.getByPlaceholderText('First Name').value = 'first';
         app.getByPlaceholderText('Last Name').value = 'last';
@@ -247,7 +247,7 @@ describe('App', () => {
         );
 
         // Click top-right menu button, click Wifi option
-        await user.click(app.getByTestId('dropdown'));
+        await user.click(app.getByTitle('Change QR code type'));
         await user.click(app.getByText('Wifi'));
 
         // Confirm fade-exit class is added to output column

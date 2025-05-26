@@ -10,7 +10,7 @@ const QrTypeDropdown = ({ qrType, showForm }) => {
             <Dropdown.Toggle
                 className="d-flex my-auto px-2"
                 style={{ fontSize: "1.25rem" }}
-                data-testid="dropdown"
+                title="Change QR code type"
             >
                 <BsList />
             </Dropdown.Toggle>
