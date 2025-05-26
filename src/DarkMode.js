@@ -1,7 +1,7 @@
 import React, { createContext, useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Button from 'react-bootstrap/Button';
-import { BrightnessHighFill, MoonFill } from 'react-bootstrap-icons';
+import { BsBrightnessHighFill, BsMoonFill } from 'react-icons/bs';
 
 export const ThemeContext = createContext();
 
@@ -36,21 +36,23 @@ export const DarkModeButton = () => {
         case "light":
             return (
                 <Button
-                    className="my-auto"
+                    className="d-flex my-auto px-2"
                     title="Switch to dark mode"
+                    style={{ fontSize: "1.25rem" }}
                     onClick={(() => {changeTheme('dark');})}
                 >
-                    <MoonFill className="mb-1" />
+                    <BsMoonFill />
                 </Button>
             );
         case "dark":
             return (
                 <Button
-                    className="my-auto"
+                    className="d-flex my-auto px-2"
                     title="Switch to light mode"
+                    style={{ fontSize: "1.25rem" }}
                     onClick={(() => {changeTheme('light');})}
                 >
-                    <BrightnessHighFill className="mb-1" />
+                    <BsBrightnessHighFill />
                 </Button>
             );
     }
