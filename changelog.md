@@ -2,6 +2,11 @@
 
 ## v1
 
+### 1.4.0
+
+* Increase navbar button icon size
+* Frontend build optimizations
+
 ### 1.3.2
 
 * Frontend performance optimizations
